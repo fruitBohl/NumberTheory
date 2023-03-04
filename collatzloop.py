@@ -1,8 +1,5 @@
 def main():
-    if 1!=2:
-        print("hello world")
-
-    print('hello wordl')
+   print("hello world!")
     
 
 if __name__ == "__main__":
