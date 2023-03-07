@@ -47,44 +47,8 @@ def add_to_paths(
         elements_generated.append(element* 2)
 
         if (element % 6 == 4) & (element > 4):
-            # paths.append((int ((element-1)/3)))
-            if count != 0:
-                paths.append((int ((element-1)/3)))
-            elif (element_index+2**(num_iterations-iterations_remaining)+1) < len(paths):
-                paths[element_index+2**(num_iterations-iterations_remaining)+1] = (int ((element-1)/3))
-            else:
-                paths.append(int ((element-1)/3))
-            # elif (element_index+2**(num_iterations-iterations_remaining)+1) < len(paths):
-            #     paths[element_index+2**(num_iterations-iterations_remaining)+1]=(int ((element-1)/3))
+            paths.append(int ((element-1)/3))
             elements_generated.append(int ((element-1)/3))
-
-    # reverse_paths = paths.copy()
-    # reverse_paths.reverse()
-
-    # while elements_searched < len(prev_generated_elems):
-    #     if reverse_paths[index] == None:
-    #         index += 1
-    #         continue
-
-    #     if len(prev_generated_elems) > 1:
-    #         paths = add_nones(paths, len(prev_generated_elems)**2 - 2)
-    #     elements_generated.append(reverse_paths[index] * 2)
-    #     paths.append(reverse_paths[index] * 2)
-
-    #     if (reverse_paths[index] % 6 == 4) & (reverse_paths[index] > 4):
-    #         paths.append(int((reverse_paths[index] - 1) / 3))
-    #         elements_generated.append(int((reverse_paths[index] - 1) / 3))
-    #         paths = add_nones(
-    #             paths, 2 ** (num_iterations - iterations_remaining + 1) - 2
-    #         )
-    #     else:
-    #         paths = add_nones(
-    #             paths, 2 ** (num_iterations - iterations_remaining + 1) - 1
-    #         )
-    #     index += 1
-    #     elements_searched += 1
-
-    # print("elements generated", elements_generated)
 
     print("paths", paths)
     print("elements generated", elements_generated)
@@ -94,7 +58,7 @@ def add_to_paths(
 
 
 def main():
-    paths = collatz([1], 7, [1], 7)
+    paths = collatz([1], 8, [1], 8)
     print(paths)
     tree = build(paths)
     print(tree)
