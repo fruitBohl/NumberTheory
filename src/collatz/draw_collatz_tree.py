@@ -20,7 +20,8 @@ def collatz(
 
 def add_nones(paths: list[list[int]], num: int) -> list[list[int]]:
     num_nones = 0
-    if num < 0: num =0
+    if num < 0:
+        num = 0
 
     while num_nones != num:
         paths.append(None)
@@ -42,13 +43,15 @@ def add_to_paths(
     for count, element in enumerate(prev_generated_elems):
         element_index = paths.index(element)
         if count == 0:
-            paths = add_nones(paths, 2**(num_iterations - iterations_remaining)-1)
+            paths = add_nones(paths, 2 ** (num_iterations - iterations_remaining) - 1)
         paths.append(element * 2)
-        elements_generated.append(element* 2)
+        elements_generated.append(element * 2)
 
         if (element % 6 == 4) & (element > 4):
-            paths.append(int ((element-1)/3))
-            elements_generated.append(int ((element-1)/3))
+            paths.append(int((element - 1) / 3))
+            elements_generated.append(int((element - 1) / 3))
+        elif count != 0:
+            paths.append(None)
 
     print("paths", paths)
     print("elements generated", elements_generated)
