@@ -40,22 +40,24 @@ def add_to_paths(
     reverse_paths = paths.copy()
     reverse_paths.reverse()
 
-    print(reverse_paths)
+    print("reverse paths = ", reverse_paths)
     print(
         "number of iterations - iterations_remaining = ",
         (num_iterations - iterations_remaining),
     )
+    print("num prev gen elems = ", num_prev_generated_elems)
 
     if len(paths) == 1:
         previously_generated_elements = [1]
+    elif len(paths) == 3:
+        previous_generated_elements = [2,1]
     else:
         previously_generated_elements = reverse_paths[
-            (num_iterations - iterations_remaining) ** 2
-            - num_prev_generated_elems : (num_iterations - iterations_remaining + 1)
-            ** 2
+            (num_iterations - iterations_remaining) ** 2 :
         ]
 
-    print(previously_generated_elements)
+    print("prev gen elems = ", previously_generated_elements)
+    print("")
 
     while elements_searched < num_prev_generated_elems:
         if reverse_paths[index] == None:
