@@ -5,7 +5,7 @@ Created on Fri Feb 17 22:58:19 2023
 
 @author: vcatt31
 """
-
+# test
 # estimating the expected proportion of evens in a collatz sequence of length n
 # will print this proportion
 
