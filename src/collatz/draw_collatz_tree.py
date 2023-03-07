@@ -35,23 +35,23 @@ def add_to_paths(
     num_iterations: int,
     iterations_remaining: int,
 ) -> tuple[list[int], list[int]]:
-    elements_searched = 0
-    index = 0
-    num_generated_elems = 0
     elements_generated = []
+
+    paths = add_nones(paths, 2 ** num_iterations)
 
     for count, element in enumerate(prev_generated_elems):
         element_index = paths.index(element)
-        if count == 0:
-            paths = add_nones(paths, 2 ** (num_iterations - iterations_remaining) - 1)
-        paths.append(element * 2)
+
         elements_generated.append(element * 2)
+        paths[element_index+2**(num_iterations-iterations_remaining)+count] = element*2
 
         if (element % 6 == 4) & (element > 4):
-            paths.append(int((element - 1) / 3))
+            distance_from_prev_elem = 0
+            if count>0:
+                distance_from_prev_elem = element_index - paths.index(prev_generated_elems[count-1])
+
             elements_generated.append(int((element - 1) / 3))
-        elif count != 0:
-            paths.append(None)
+            paths[element_index+2**(num_iterations-iterations_remaining)+(2*distance_from_prev_elem)+1] = (int((element - 1) / 3))
 
     print("paths", paths)
     print("elements generated", elements_generated)
@@ -62,7 +62,6 @@ def add_to_paths(
 
 def main():
     paths = collatz([1], 8, [1], 8)
-    print(paths)
     tree = build(paths)
     print(tree)
 
