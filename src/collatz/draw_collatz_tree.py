@@ -37,21 +37,30 @@ def add_to_paths(
 ) -> tuple[list[int], list[int]]:
     elements_generated = []
 
-    paths = add_nones(paths, 2 ** num_iterations)
+    paths = add_nones(paths, 2**num_iterations)
 
     for count, element in enumerate(prev_generated_elems):
         element_index = paths.index(element)
 
         elements_generated.append(element * 2)
-        paths[element_index+2**(num_iterations-iterations_remaining)+count] = element*2
+        paths[element_index + 2 ** (num_iterations - iterations_remaining) + count] = (
+            element * 2
+        )
 
         if (element % 6 == 4) & (element > 4):
             distance_from_prev_elem = 0
-            if count>0:
-                distance_from_prev_elem = element_index - paths.index(prev_generated_elems[count-1])
+            if count > 0:
+                distance_from_prev_elem = element_index - paths.index(
+                    prev_generated_elems[count - 1]
+                )
 
             elements_generated.append(int((element - 1) / 3))
-            paths[element_index+2**(num_iterations-iterations_remaining)+(2*distance_from_prev_elem)+1] = (int((element - 1) / 3))
+            paths[
+                element_index
+                + 2 ** (num_iterations - iterations_remaining)
+                + (2 * distance_from_prev_elem)
+                + 1
+            ] = int((element - 1) / 3)
 
     print("paths", paths)
     print("elements generated", elements_generated)
