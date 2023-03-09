@@ -47,7 +47,7 @@ def add_to_paths(
         elif element_index == 1:
             paths[3] = element * 2
         else:
-            paths[element_index * 2 + 1] = element * 2 
+            paths[element_index * 2 + 1] = element * 2
 
         if (element % 6 == 4) & (element > 4):
             elements_generated.append(int((element - 1) / 3))
