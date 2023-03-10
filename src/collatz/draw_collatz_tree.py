@@ -40,6 +40,8 @@ def add_nones(paths: list[int], num: int) -> list[list[int]]:
         num_nones += 1
     return paths
 
+" anything above 3 mod 6 cannot be in a loop"
+
 
 def add_to_tree(
     breadth_first_representation: list[int],
@@ -75,7 +77,7 @@ def add_to_tree(
 
 def main():
     depth = int(input("Enter depth of collatz tree you would like to visualize: "))
-    start_pos = int(input("Enter number for bottom of collatz tree: "))
+    start_pos = int(input("Enter number for bottom of collatz tree:"))
     paths = collatz([start_pos], [start_pos], depth - 1, depth - 1)
     tree = build(paths)
     tree.pprint()
