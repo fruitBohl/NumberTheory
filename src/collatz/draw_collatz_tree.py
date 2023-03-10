@@ -74,8 +74,9 @@ def add_to_tree(
 
 
 def main():
-    depth = input("Enter depth of collatz tree you would like to visualize: ")
-    paths = collatz([1], [1], int(depth) - 1, int(depth) - 1)
+    depth = int(input("Enter depth of collatz tree you would like to visualize: "))
+    start_pos = int(input("Enter number for bottom of collatz tree: "))
+    paths = collatz([start_pos], [start_pos], depth - 1, depth - 1)
     tree = build(paths)
     tree.pprint()
 
