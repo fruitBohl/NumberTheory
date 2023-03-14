@@ -7,33 +7,22 @@ def determine_differences(max_n: int):
     n and 2n, and between n^2 and (n+1)^2.
     """
 
-    difference_double = 0
     difference_squared = 0
     previous_square_number = 1
     denom = 0
-    n = 0
+    n = 2
 
     while n <= max_n:
         if n == int(m.floor(m.sqrt(n))) ** 2:
-            difference_double += n
             difference_squared += n - previous_square_number
             previous_square_number = n
             denom += 1
         n += 1
 
     print(
-        f"average difference between n and 2n up until {max_n}: ",
-        difference_double / denom,
-    )
-    print(
         f"average difference between n^2 and (n+1)^2 up until {max_n}: ",
         difference_squared / denom,
     )
-    print(
-        "ratio between difference squared and difference doubled: ",
-        difference_squared / difference_double,
-    )
-    print()
 
 
 if __name__ == "__main__":
