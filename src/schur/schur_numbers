@@ -1,0 +1,57 @@
+#Calculating Schurs numbers 
+
+#%%INITIALISING
+from gurobipy import *
+import math 
+
+#%% CONSTANTS
+NUMBER_OF_SUBSETS = 4
+MAX_INT = 45
+
+#%% FUNCTION
+
+#%% SETS
+N = list(range(NUMBER_OF_SUBSETS+1)) #index of subsets 
+I = list(range(MAX_INT + 1))[1:] #integers
+
+#%% MODEL
+m = Model("Schurs number")
+
+#%% VARIABLES
+X = {(i, n): m.addVar(vtype = GRB.BINARY) for i in I for n in N} #binary variable
+
+#%% OBJECTIVE
+m.setObjective(quicksum(X[(i, 0)] for i in I), GRB.MINIMIZE)
+
+#%% CONSTRAINTS
+for i in I[:-1]:
+    m.addConstr(quicksum(X[i, n] for n in N[1:]) >= quicksum(X[i+1, n] for n in N[1:]))
+
+for i in I:
+    m.addConstr(quicksum(X[(i, n)] for n in N) == 1)
+
+m.addConstr(X[(1, 1)] == 1)
+
+for n in N[1:]:
+    for i in I:
+        for j in I:
+            for k in I:
+                if i + j - k == 0: 
+                    m.addConstr(X[(i, n)] + X[(j, n)] + X[(k, n)] <= 2)
+
+
+#%% OPTIMIZE
+m.optimize()
+
+#%% OUTPUTS
+sn = 0
+for n in N:
+    if n >= 1:
+        for i in I: 
+            if X[i, n].x ==1:
+                sn += 1
+                print("SET", n, "CONTAINS", i) 
+
+print("SN =", sn)
+
+#%%
