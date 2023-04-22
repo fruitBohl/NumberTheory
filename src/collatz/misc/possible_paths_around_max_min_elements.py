@@ -89,7 +89,7 @@ def generate_binary_strings(bit_count):
     return binary_strings
 
 
-num_steps = 10
+num_steps = 5
 num_paths = num_steps**2
 possible_paths = generate_binary_strings(num_steps)
 
@@ -156,11 +156,11 @@ for path in possible_paths:
 print("Before min paths = ", before_min_paths)
 
 
-for path in after_max_paths:
-    x = [4, 12]
-    for step in path:
-        if int(step == "0"):
-            x = mod1(x)
-        else:
-            x = mod3(x)
-        print(x)
+# for path in after_max_paths:
+#     x = [4, 12]
+#     for step in path:
+#         if int(step == "0"):
+#             x = mod1(x)
+#         else:
+#             x = mod3(x)
+#         print(x)

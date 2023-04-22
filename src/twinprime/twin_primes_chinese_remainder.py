@@ -20,6 +20,8 @@ of elements that will fall through this filter.
 
 I would like to write an analytic sequence to represent each of these and take the limit as n -> inf. 
 """
+
+#%%
 from math import prod
 import numpy as np
 import itertools
@@ -128,6 +130,8 @@ def main(prime):
     
     return
 
-main(13)
+main(11)
 
 
+
+# %%
