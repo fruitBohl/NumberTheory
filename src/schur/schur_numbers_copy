@@ -29,7 +29,7 @@ c = 4
 MAX_INT = 44
 
 #%% SETS
-N = list(range(c+1)) #index of subsets 
+N = list(range(c+1))[1:] #index of subsets 
 I = list(range(MAX_INT + 1))[1:] #integers
 
 #%% MODEL
@@ -40,16 +40,12 @@ m = Model("Schurs number")
 #binary variable - 1 if integer i is in subset n, 0 otherwise. 
 X = {(i, n): m.addVar(vtype = GRB.BINARY) for i in I for n in N} 
 
-#%% OBJECTIVE 
-
-#minimise the number of integers that are not allocated subsets. 
-m.setObjective(quicksum(X[(i, 0)] for i in I), GRB.MINIMIZE) 
 
 #%% CONSTRAINTS
 
 #allocate each integer a subset starting from 1 without skipping 
 for i in I[:-1]:
-    m.addConstr(quicksum(X[i, n] for n in N[1:]) >= quicksum(X[i+1, n] for n in N[1:]))
+    m.addConstr(quicksum(X[i, n] for n in N) >= quicksum(X[i+1, n] for n in N))
 
 #each integer can only be put in one subset
 for i in I:
@@ -59,7 +55,7 @@ for i in I:
 m.addConstr(X[(1, 1)] == 1)
 
 #sum-free constraint 
-for n in N[1:]:
+for n in N:
     for i in I[:-1]:
         for j in I[:-i]:
                 m.addConstr(X[(i, n)] + X[(j, n)] + X[(i+j, n)] <= 2)
@@ -70,26 +66,40 @@ m.optimize()
 
 #%% OUTPUTS
 
+SETS = {}
+for n in N:
+     SETS[n] = []
+
 sn = 0
 for n in N:
-    if n >= 1:
-        for i in I: 
-            if X[i, n].x ==1:
-                sn += 1
-                print("SET", n, "CONTAINS", i) #printing each integers subset allocation
+    for i in I: 
+        if X[i, n].x ==1:
+            SETS[n].append(i)
+            sn += 1
 
-if m.ObjVal >= 1:   
-    print("S(",c ,") = ", sn)
+print(f"S({c}) = {sn}")
+for n in N:
+     print(f"SET {n} = {SETS[n]}")
+
+
 
 #%% PRELIM RESULTS 
 """
-S(1)
+S(1) = 1
+SET 1 = [1]
 
-S(2)
+S(2) = 4
+SET 1 = [1, 4]
+SET 2 = [2, 3]
 
-S(3)
+S(3) = 13
+SET 1 = [1, 4, 7, 10, 13]
+SET 2 = [2, 3, 11, 12]
+SET 3 = [5, 6, 8, 9]
 
-S(4)
-
-
+S(4) = 44
+SET 1 = [1, 5, 8, 12, 15, 19, 26, 33, 37, 40, 44]
+SET 2 = [2, 6, 7, 10, 11, 30, 34, 35, 38, 39, 43]
+SET 3 = [13, 17, 18, 20, 21, 22, 23, 25, 27, 28, 32]
+SET 4 = [3, 4, 9, 14, 16, 24, 29, 31, 36, 41, 42]
 """
