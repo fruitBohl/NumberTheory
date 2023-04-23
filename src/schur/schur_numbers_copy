@@ -43,10 +43,6 @@ X = {(i, n): m.addVar(vtype = GRB.BINARY) for i in I for n in N}
 
 #%% CONSTRAINTS
 
-#allocate each integer a subset starting from 1 without skipping 
-for i in I[:-1]:
-    m.addConstr(quicksum(X[i, n] for n in N) >= quicksum(X[i+1, n] for n in N))
-
 #each integer can only be put in one subset
 for i in I:
     m.addConstr(quicksum(X[(i, n)] for n in N) == 1)
