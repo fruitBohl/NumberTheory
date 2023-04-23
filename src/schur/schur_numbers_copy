@@ -51,9 +51,6 @@ for i in I[:-1]:
 for i in I:
     m.addConstr(quicksum(X[(i, n)] for n in N) == 1)
 
-#WLOG allocate integer 1 to subset 1
-m.addConstr(X[(1, 1)] == 1)
-
 #sum-free constraint 
 for n in N:
     for i in I[:-1]:
@@ -80,7 +77,6 @@ for n in N:
 print(f"S({c}) = {sn}")
 for n in N:
      print(f"SET {n} = {SETS[n]}")
-
 
 
 #%% PRELIM RESULTS 
