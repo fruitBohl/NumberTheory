@@ -1,37 +1,64 @@
 #Calculating Schurs numbers 
 
+"""
+Here we define the Schur number S(c) as the largest integer n, such that the interval [1, n]
+can be partitioned into c sum-free subsets. 
+
+Sum-free means that for all integers x,y,z (not necessarily unique) in in each subset we have
+x + y != z. 
+
+We confirm that: 
+S(1) = 1
+S(2) = 4
+S(3) = 13
+S(4) = 44
+S(5) = ...
+
+To see these results run the code with MAX_INT = S(c) + 1. 
+
+Please note that run times for only the first four Schur numbers are quick. 
+
+If anyone reading this has any feedback, or suggestions please feel free to contact me. 
+"""
 #%%INITIALISING
 from gurobipy import *
 import math 
 
 #%% CONSTANTS
-NUMBER_OF_SUBSETS = 4
-MAX_INT = 45
-
-#%% FUNCTION
+c = 5
+MAX_INT = 161
 
 #%% SETS
-N = list(range(NUMBER_OF_SUBSETS+1)) #index of subsets 
+N = list(range(c+1)) #index of subsets 
 I = list(range(MAX_INT + 1))[1:] #integers
 
 #%% MODEL
 m = Model("Schurs number")
 
 #%% VARIABLES
-X = {(i, n): m.addVar(vtype = GRB.BINARY) for i in I for n in N} #binary variable
 
-#%% OBJECTIVE
-m.setObjective(quicksum(X[(i, 0)] for i in I), GRB.MINIMIZE)
+#binary variable - 1 if integer i is in subset n, 0 otherwise. 
+X = {(i, n): m.addVar(vtype = GRB.BINARY) for i in I for n in N} 
+
+#%% OBJECTIVE 
+
+#minimise the number of integers that are not allocated subsets. 
+m.setObjective(quicksum(X[(i, 0)] for i in I), GRB.MINIMIZE) 
 
 #%% CONSTRAINTS
+
+#allocate each integer a subset starting from 1 without skipping 
 for i in I[:-1]:
     m.addConstr(quicksum(X[i, n] for n in N[1:]) >= quicksum(X[i+1, n] for n in N[1:]))
 
+#each integer can only be put in one subset
 for i in I:
     m.addConstr(quicksum(X[(i, n)] for n in N) == 1)
 
+#WLOG allocate integer 1 to subset 1
 m.addConstr(X[(1, 1)] == 1)
 
+#sum-free constraint 
 for n in N[1:]:
     for i in I[:-1]:
         for j in I[:-i]:
@@ -42,13 +69,14 @@ for n in N[1:]:
 m.optimize()
 
 #%% OUTPUTS
+
 sn = 0
 for n in N:
     if n >= 1:
         for i in I: 
             if X[i, n].x ==1:
                 sn += 1
-                print("SET", n, "CONTAINS", i) 
+                print("SET", n, "CONTAINS", i) #printing each integers subset allocation
 
 print("SN =", sn)
 
