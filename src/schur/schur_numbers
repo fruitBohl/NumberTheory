@@ -33,11 +33,9 @@ for i in I:
 m.addConstr(X[(1, 1)] == 1)
 
 for n in N[1:]:
-    for i in I:
-        for j in I:
-            for k in I:
-                if i + j - k == 0: 
-                    m.addConstr(X[(i, n)] + X[(j, n)] + X[(k, n)] <= 2)
+    for i in I[:-1]:
+        for j in I[:-i]:
+                m.addConstr(X[(i, n)] + X[(j, n)] + X[(i+j, n)] <= 2)
 
 
 #%% OPTIMIZE
