@@ -1,5 +1,6 @@
 #Calculating Schurs numbers 
 
+#%% INTRO
 """
 Here we define the Schur number S(c) as the largest integer n, such that the interval [1, n]
 can be partitioned into c sum-free subsets. 
@@ -25,8 +26,8 @@ from gurobipy import *
 import math 
 
 #%% CONSTANTS
-c = 4
-MAX_INT = 44
+c = 5
+MAX_INT = 120
 
 #%% SETS
 N = list(range(c+1))[1:] #index of subsets 
@@ -43,14 +44,14 @@ X = {(i, n): m.addVar(vtype = GRB.BINARY) for i in I for n in N}
 
 #%% CONSTRAINTS
 
-#each integer can only be put in one subset
+#each integer is allocated one subset
 for i in I:
     m.addConstr(quicksum(X[(i, n)] for n in N) == 1)
 
 #sum-free constraint 
 for n in N:
-    for i in I[:-1]:
-        for j in I[:-i]:
+    for i in I[:-MAX_INT//2]:
+        for j in I[i-1:-i]:
                 m.addConstr(X[(i, n)] + X[(j, n)] + X[(i+j, n)] <= 2)
 
 
@@ -70,10 +71,9 @@ for n in N:
             SETS[n].append(i)
             sn += 1
 
-print(f"S({c}) = {sn}")
+print(f"S({c}) >= {sn}")
 for n in N:
      print(f"SET {n} = {SETS[n]}")
-
 
 #%% PRELIM RESULTS 
 """
