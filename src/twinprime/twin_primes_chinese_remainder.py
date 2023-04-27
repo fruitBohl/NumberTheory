@@ -154,15 +154,8 @@ def main(prime):
     print(false_twins)
     print("")
 
-<<<<<<< HEAD
 main(11)
 
 
 
 # %%
-=======
-    return
-
-
-main(13)
->>>>>>> fd3b5bfbb1e67c195b4efa2e6c77ee00ac39d513

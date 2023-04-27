@@ -66,12 +66,6 @@ def main(n):
     print("")
 
     return
-<<<<<<< HEAD
-#%%
-main(7)
-# %%
-=======
 
 
 main(11)
->>>>>>> fd3b5bfbb1e67c195b4efa2e6c77ee00ac39d513
