@@ -1,0 +1,54 @@
+#2x2 matrix inverse calculator in Z mod n 
+
+"""
+This code is to solve for the inverse of a matrix modulo n. 
+
+Please note, the solution is unique only if the determinent is invertible. 
+"""
+#%% INPUT
+n = 26 #Zn
+
+M = [[6, 3],
+     [3, 4]]
+
+#%% FUNCTIONS
+def factors(a):
+    f = []
+    i = 1
+    while i <= a:
+        if a%i == 0:
+            f.append(i)
+        i += 1
+    return(f)
+
+def gcd(a, b):
+    i = 1
+    while i <= min(a, b):
+        if a%i == 0 and b%i == 0:
+            g = i 
+        i += 1
+    return(g)
+
+def inverse(a, n):
+    a_1 = []
+    i = 1
+    while i < n:
+        if (a*i)%n == 1:
+            a_1.append(i)
+        i += 1
+    return(a_1)
+
+def det(M):
+    return(M[0][0]*M[1][1] - M[0][1]*M[1][0])
+
+def main(n, M):
+    if gcd(det(M), n) == 1:
+        i = inverse(det(M), n)[0]
+        return([[(i*(M[1][1]))%n, (-i*M[1][0])%n], [(-i*M[0][1])%n, (i*M[0][0])%n]])
+    
+    if gcd(det(M), n) >= 1:
+        print("INVERSE DOES NOT EXIST")
+
+#%% OUTPUT
+M1 = main(n, M)
+print(f"The inverse of {M} = {M1}")
