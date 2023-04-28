@@ -10,7 +10,7 @@ def collatz(
     prev_generated_elems: List[int],
     iterations_remaining: int,
     num_iterations: int,
-) -> List[int]:
+) -> Tuple[List[int], List[int]]:
     """
     Recursive function to generate breadth-first list representation of collatz tree of
     depth num_iterations.
@@ -27,7 +27,7 @@ def collatz(
             num_iterations,
         )
     elif iterations_remaining == 0:
-        return breadth_first_representation
+        return breadth_first_representation, prev_generated_elems
 
 
 def add_nones(paths: List[int], num: int) -> List[List[int]]:
@@ -53,6 +53,7 @@ def add_to_tree(
     """
     Adds another level to the breadth_first_representation of the collatz tree.
     """
+
     elements_generated = []
 
     breadth_first_representation = add_nones(
@@ -77,13 +78,19 @@ def add_to_tree(
     return breadth_first_representation, elements_generated
 
 
-def main():
+def draw_collatz_tree():
+    """
+    Script to draw collatz tree with user input height starting from any point in the tree,
+    decided by the user. Prints to console
+    """
+
     depth = int(input("Enter depth of collatz tree you would like to visualize: "))
     start_pos = int(input("Enter number for bottom of collatz tree:"))
-    paths = collatz([start_pos], [start_pos], depth - 1, depth - 1)
+    paths, last_gen_elems = collatz([start_pos], [start_pos], depth - 1, depth - 1)
+    print(last_gen_elems)
     tree = build(paths)
     tree.pprint()
 
 
 if __name__ == "__main__":
-    main()
+    draw_collatz_tree()
