@@ -30,39 +30,54 @@ def create_pattern(paths: List[int]) -> List[int]:
     return pattern
 
 
-def search_for_similar_pattern(
-    depth: int, iteration: int, leaf: int, pattern_dict: Dict[List[str], List[int]]
-) -> Dict[str, Optional[Node]]:
-    """
-    Given a certain depth d start leaf l, noting the pattern, and then look at all leaves
-    and see if given the same depth, they also have the same pattern. Do this recursively for i
-    iterations.
-    """
+def generate_similar_pattern(
+    depth: int, num_iterations: int, root: int
+) -> Tuple[Dict[int, Optional[Node]], Dict[int, str]]:
+    pattern_map = {}
+    pattern_starts = {}
 
-    if iteration == 0:
-        return pattern_dict
+    if (num_iterations <= 0) or (depth <= 0):
+        return pattern_map, pattern_starts
 
-    # calculate pattern for current leaf
-    paths, next_leaves = collatz([leaf], [leaf], depth, depth)
-    pattern = create_pattern(paths)
-    current_tree_pattern = build(pattern)
+    def search_for_similar_pattern(depth: int, num_iterations: int, root: int) -> None:
+        """
+        Given a certain depth d start leaf l, noting the pattern, and then look at all
+        leaves and see if given the same depth, they also have the same pattern. Do this
+        recursively for i iterations.
+        """
 
-    # add pattern to list
-    for pattern_leaf, tree_pattern in pattern_dict.items():
-        if tree_pattern.values == current_tree_pattern.values:
-            pattern_dict[pattern_leaf + f", {leaf}"] = pattern_dict.pop(pattern_leaf)
-            break
-    else:
-        pattern_dict[f"{leaf}"] = current_tree_pattern
+        # calculate pattern for current leaf
+        paths, next_leaves = collatz([root], [root], depth, depth)
+        current_pattern = create_pattern(paths)
 
-    # calculate next leaves
-    for new_leaf in next_leaves:
-        return search_for_similar_pattern(depth, iteration - 1, new_leaf, pattern_dict)
+        # add pattern to list
+        for pattern_key, pattern in pattern_map.items():
+            if pattern.values == build(current_pattern).values:
+                pattern_starts[pattern_key] = (
+                    pattern_starts.pop(pattern_key) + f", {root}"
+                )
+        else:
+            if pattern_starts == {}:
+                new_pattern_key = 0
+            else:
+                new_pattern_key = max(list(pattern_starts.keys())) + 1
+            pattern_map[new_pattern_key] = build(current_pattern)
+            pattern_starts[new_pattern_key] = f"{root}"
+
+        if num_iterations == 0:
+            return
+        else:
+            for new_leaf in next_leaves:
+                search_for_similar_pattern(depth, num_iterations - 1, new_leaf)
+
+    search_for_similar_pattern(depth, num_iterations, root)
+
+    return pattern_map, pattern_starts
 
 
 if __name__ == "__main__":
-    pattern_dict = search_for_similar_pattern(10, 2, 1, {})
+    pattern_map, pattern_starts = generate_similar_pattern(2, 3, 1)
 
-    for leaves, pattern in pattern_dict.items():
-        print(f"leaves with pattern seen below: {leaves}")
-        pattern.pprint()
+    for pattern_key, nodes in pattern_starts.items():
+        print(f"leaves with pattern seen below: {nodes}")
+        pattern_map[pattern_key].pprint()
