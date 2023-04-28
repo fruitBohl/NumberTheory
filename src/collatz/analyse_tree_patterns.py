@@ -53,7 +53,7 @@ def search_for_similar_pattern(
             pattern_dict[pattern_leaf + f", {leaf}"] = pattern_dict.pop(pattern_leaf)
             break
     else:
-        pattern_dict[f"leaf {leaf}"] = current_tree_pattern
+        pattern_dict[f"{leaf}"] = current_tree_pattern
 
     # calculate next leaves
     for new_leaf in next_leaves:
@@ -63,6 +63,6 @@ def search_for_similar_pattern(
 if __name__ == "__main__":
     pattern_dict = search_for_similar_pattern(10, 2, 1, {})
 
-    for leaf, pattern in pattern_dict.items():
-        print(leaf)
+    for leaves, pattern in pattern_dict.items():
+        print(f"leaves with pattern seen below: {leaves}")
         pattern.pprint()
