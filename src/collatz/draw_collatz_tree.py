@@ -78,18 +78,9 @@ def add_to_tree(
     return breadth_first_representation, elements_generated
 
 
-def draw_collatz_tree():
-    """
-    Script to draw collatz tree with user input height starting from any point in the tree,
-    decided by the user. Prints to console
-    """
-
+if __name__ == "__main__":
     depth = int(input("Enter depth of collatz tree you would like to visualize: "))
     start_pos = int(input("Enter number for bottom of collatz tree:"))
     paths, last_gen_elems = collatz([start_pos], [start_pos], depth - 1, depth - 1)
     tree = build(paths)
     tree.pprint()
-
-
-if __name__ == "__main__":
-    draw_collatz_tree()

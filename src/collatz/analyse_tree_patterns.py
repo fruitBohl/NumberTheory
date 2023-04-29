@@ -6,7 +6,7 @@ from draw_collatz_tree import collatz, add_nones
 
 def get_leaves(prev_generated_elems: List[int]) -> List[int]:
     """
-    Adds another level to the breadth_first_representation of the collatz tree.
+    Generates the next elements in the collatz tree
     """
 
     elements_generated = []
@@ -19,12 +19,13 @@ def get_leaves(prev_generated_elems: List[int]) -> List[int]:
     return elements_generated
 
 
-def create_pattern(paths: List[int]) -> List[int]:
-    """Creates a generalized pattern of section of collatz tree defined in 'paths'"""
+def create_pattern(paths: List[int], leaves: List[int]) -> List[int]:
+    """
+    Creates a generalized pattern of section of collatz tree defined in 'paths'
+    """
 
     paths_array = np.array(paths)
-
-    paths_array_updated = np.where(paths_array != None, 'x', paths_array)
+    paths_array_updated = np.where(paths_array != None, "x", paths_array)
     pattern = list(paths_array_updated)
 
     return pattern
@@ -41,20 +42,22 @@ def generate_similar_pattern(
 
     def search_for_similar_pattern(depth: int, num_iterations: int, root: int) -> None:
         """
-        Given a certain depth d start leaf l, noting the pattern, and then look at all
-        leaves and see if given the same depth, they also have the same pattern. Do this
-        recursively for i iterations.
+        Given a certain depth and root, the subtree of the certain depth is calculated,
+        its generalized pattern is noted, and if it is a previous unseen pattern, add to
+        the dictionary of patterns, and if it is already seen, append the root to the
+        list of roots which start with this pattern. Do this recursively for
+        num_iterations.
         """
 
         # calculate pattern for current leaf
-        tree, next_leaves = collatz([root], [root], depth, depth)
-        current_pattern = create_pattern(tree)
+        tree, next_roots = collatz([root], [root], depth, depth)
+        current_pattern = create_pattern(tree, next_roots)
 
         # add pattern to list
         for pattern_key, pattern in pattern_map.items():
             if pattern.values == build(current_pattern).values:
                 pattern_starts[pattern_key] = (
-                    pattern_starts.pop(pattern_key) + f", {root}"
+                    pattern_starts.pop(pattern_key) + f",{root}"
                 )
                 break
         else:
@@ -68,8 +71,8 @@ def generate_similar_pattern(
         if num_iterations == 0:
             return
         else:
-            for new_leaf in next_leaves:
-                search_for_similar_pattern(depth, num_iterations - 1, new_leaf)
+            for new_root in next_roots:
+                search_for_similar_pattern(depth, num_iterations - 1, new_root)
 
     search_for_similar_pattern(depth, num_iterations, root)
 
