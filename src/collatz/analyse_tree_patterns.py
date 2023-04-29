@@ -24,7 +24,7 @@ def create_pattern(paths: List[int]) -> List[int]:
 
     paths_array = np.array(paths)
 
-    paths_array_updated = np.where(paths_array != None, 1, paths_array)
+    paths_array_updated = np.where(paths_array != None, 'x', paths_array)
     pattern = list(paths_array_updated)
 
     return pattern
@@ -47,8 +47,8 @@ def generate_similar_pattern(
         """
 
         # calculate pattern for current leaf
-        paths, next_leaves = collatz([root], [root], depth, depth)
-        current_pattern = create_pattern(paths)
+        tree, next_leaves = collatz([root], [root], depth, depth)
+        current_pattern = create_pattern(tree)
 
         # add pattern to list
         for pattern_key, pattern in pattern_map.items():
@@ -83,5 +83,5 @@ if __name__ == "__main__":
     pattern_map, pattern_starts = generate_similar_pattern(depth - 1, num_iterations, 1)
 
     for pattern_key, nodes in pattern_starts.items():
-        print(f"leaves with pattern seen below: {nodes}")
+        print(f"Nodes with pattern seen below: {nodes}")
         pattern_map[pattern_key].pprint()
