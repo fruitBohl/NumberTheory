@@ -56,6 +56,7 @@ def generate_similar_pattern(
                 pattern_starts[pattern_key] = (
                     pattern_starts.pop(pattern_key) + f", {root}"
                 )
+                break
         else:
             if pattern_starts == {}:
                 new_pattern_key = 0
@@ -76,7 +77,10 @@ def generate_similar_pattern(
 
 
 if __name__ == "__main__":
-    pattern_map, pattern_starts = generate_similar_pattern(2, 3, 1)
+    depth = int(input("Enter depth of pattern you would like to analyze: "))
+    num_iterations = int(input("Enter number of iterations: "))
+
+    pattern_map, pattern_starts = generate_similar_pattern(depth - 1, num_iterations, 1)
 
     for pattern_key, nodes in pattern_starts.items():
         print(f"leaves with pattern seen below: {nodes}")
