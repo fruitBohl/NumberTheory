@@ -1,12 +1,16 @@
 from binarytree import build
+from typing import *
+
+# Notes about collatz tree
+# anything above 3 mod 6 cannot be in a loop
 
 
 def collatz(
-    breadth_first_representation: list[list],
-    prev_generated_elems: list[int],
+    breadth_first_representation: List[list],
+    prev_generated_elems: List[int],
     iterations_remaining: int,
     num_iterations: int,
-) -> list[int]:
+) -> Tuple[List[int], List[int]]:
     """
     Recursive function to generate breadth-first list representation of collatz tree of
     depth num_iterations.
@@ -23,10 +27,10 @@ def collatz(
             num_iterations,
         )
     elif iterations_remaining == 0:
-        return breadth_first_representation
+        return breadth_first_representation, prev_generated_elems
 
 
-def add_nones(paths: list[int], num: int) -> list[list[int]]:
+def add_nones(paths: List[int], num: int) -> List[List[int]]:
     """
     Simply appends 'num' None elements to the list.
     """
@@ -40,17 +44,16 @@ def add_nones(paths: list[int], num: int) -> list[list[int]]:
         num_nones += 1
     return paths
 
-" anything above 3 mod 6 cannot be in a loop"
-
 
 def add_to_tree(
-    breadth_first_representation: list[int],
-    prev_generated_elems: list[int],
+    breadth_first_representation: List[int],
+    prev_generated_elems: List[int],
     num_iterations: int,
-) -> tuple[list[int], list[int]]:
+) -> Tuple[List[int], List[int]]:
     """
     Adds another level to the breadth_first_representation of the collatz tree.
     """
+
     elements_generated = []
 
     breadth_first_representation = add_nones(
@@ -75,13 +78,9 @@ def add_to_tree(
     return breadth_first_representation, elements_generated
 
 
-def main():
+if __name__ == "__main__":
     depth = int(input("Enter depth of collatz tree you would like to visualize: "))
     start_pos = int(input("Enter number for bottom of collatz tree:"))
-    paths = collatz([start_pos], [start_pos], depth - 1, depth - 1)
+    paths, last_gen_elems = collatz([start_pos], [start_pos], depth - 1, depth - 1)
     tree = build(paths)
     tree.pprint()
-
-
-if __name__ == "__main__":
-    main()
