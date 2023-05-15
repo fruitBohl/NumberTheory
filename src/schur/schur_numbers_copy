@@ -27,7 +27,7 @@ import math
 
 #%% CONSTANTS
 c = 5
-MAX_INT = 161
+MAX_INT = 130 
 
 #%% SETS
 N = list(range(c+1))[1:] #index of subsets 

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+#%%
 """
 Created on Thu Nov 17 10:36:55 2022
 
@@ -154,15 +155,6 @@ def main(prime):
     print(false_twins)
     print("")
 
-<<<<<<< HEAD
-main(11)
+main(7)
 
-
-
-# %%
-=======
-    return
-
-
-main(13)
->>>>>>> fd3b5bfbb1e67c195b4efa2e6c77ee00ac39d513
+#%%
