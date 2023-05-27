@@ -33,7 +33,7 @@ def calculate_energy(n: int, j: int, k: int) -> float:
     return energy
 
 
-def two_dimensional_plot(n: int) -> None:
+def two_dimensional_energy__plot(n: int) -> None:
     """
     Plot all possible I-graphs (n,j,k) given a value for n.
     """
@@ -56,7 +56,7 @@ def two_dimensional_plot(n: int) -> None:
     fig.write_html(f"energy_plot_{n}.html")
 
 
-def three_dimensional_plot(n: int) -> None:
+def three_dimensional_energy_plot(n: int) -> None:
     """
     3D surface plot of energies for I(n,j,k)
     """
@@ -93,4 +93,4 @@ def three_dimensional_plot(n: int) -> None:
 
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
-    three_dimensional_plot(113)
+    three_dimensional_energy_plot(113)
