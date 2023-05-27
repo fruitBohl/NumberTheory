@@ -1,4 +1,6 @@
 from math import cos, pi, sqrt, floor
+import pandas as pd
+import plotly.express as px
 
 
 def calculate_eigenvalue(n: int, j: int, k: int, l: int) -> tuple[float, float]:
@@ -32,8 +34,22 @@ def calculate_energy(n: int, j: int, k: int) -> float:
 
 
 if __name__ == "__main__":
-    n = 12
+    pd.options.plotting.backend = "plotly"
 
-    for k in range(floor(n/2)+1):
-        for j in range(k+1):
-            print(f"energy for I({n},{j},{k}) = {calculate_energy(n, j, k)}")
+    n = 1000
+    data = []
+
+    for k in range(floor(n / 2) + 1):
+        for j in range(k + 1):
+            energy = calculate_energy(n, j, k)
+            data.append([f"({j},{k})", energy])
+
+    df = pd.DataFrame(columns=["(j,k)", "Energy"], data=data)
+
+    fig = df.plot.line(
+        x="(j,k)", 
+        y="Energy",
+        title=f"Energy of I({n},j,k) With All Possible (j,k) Values",
+    )
+    fig.update_layout(xaxis_type='category')
+    fig.write_html("energy_plot.html")
