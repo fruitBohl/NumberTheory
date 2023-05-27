@@ -1,7 +1,7 @@
 from binarytree import build, Node
 from typing import *
 import numpy as np
-from draw_collatz_tree import collatz, add_nones
+from draw_collatz_tree import collatz
 
 
 def get_leaves(prev_generated_elems: List[int]) -> List[int]:
@@ -19,7 +19,7 @@ def get_leaves(prev_generated_elems: List[int]) -> List[int]:
     return elements_generated
 
 
-def create_pattern(paths: List[int], leaves: List[int]) -> List[int]:
+def create_pattern(paths: List[int]) -> List[int]:
     """
     Creates a generalized pattern of section of collatz tree defined in 'paths'
     """
