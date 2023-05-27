@@ -73,8 +73,8 @@ def three_dimensional_plot(n: int) -> None:
             y=list(range(floor(n / 2) + 1)),
             z=energies,
             cauto=False,
-            cmin=2.25*n,
-            cmax=4.25*n,
+            cmin=2.25 * n,
+            cmax=4.25 * n,
             colorscale="Rainbow",
         )
     )
@@ -82,7 +82,7 @@ def three_dimensional_plot(n: int) -> None:
     fig.update_layout(
         title=f"Energy of I({n},j,k) With All Possible (j,k) Values",
         scene=dict(
-            zaxis=dict(range=[2.75*n, 4.25*n]),
+            zaxis=dict(range=[2.75 * n, 4.25 * n]),
             xaxis_title="j Value",
             yaxis_title="k Value",
             zaxis_title="Energy",
