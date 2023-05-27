@@ -1,6 +1,5 @@
 from math import cos, pi, sqrt, floor
 import pandas as pd
-import numpy as np
 import plotly.graph_objects as go
 
 
@@ -70,24 +69,28 @@ def three_dimensional_plot(n: int) -> None:
 
     fig = go.Figure(
         go.Surface(
-            contours={
-                "x": {
-                    "show": True,
-                    "start": 1.5,
-                    "end": 2,
-                    "size": 0.04,
-                    "color": "white",
-                },
-                "z": {"show": True, "start": 0.5, "end": 0.8, "size": 0.05},
-            },
             x=list(range(floor(n / 2) + 1)),
             y=list(range(floor(n / 2) + 1)),
             z=energies,
+            cauto=False,
+            cmin=2.25*n,
+            cmax=4.25*n,
+            colorscale="Rainbow",
         )
+    )
+
+    fig.update_layout(
+        title=f"Energy of I({n},j,k) With All Possible (j,k) Values",
+        scene=dict(
+            zaxis=dict(range=[2.75*n, 4.25*n]),
+            xaxis_title="j Value",
+            yaxis_title="k Value",
+            zaxis_title="Energy",
+        ),
     )
     fig.write_html(f"3d_energy_plot_{n}.html")
 
 
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
-    three_dimensional_plot(50)
+    three_dimensional_plot(113)
