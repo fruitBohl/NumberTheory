@@ -1,6 +1,7 @@
 from math import cos, pi, sqrt, floor
 import pandas as pd
-import plotly.express as px
+import numpy as np
+import plotly.graph_objects as go
 
 
 def calculate_eigenvalue(n: int, j: int, k: int, l: int) -> tuple[float, float]:
@@ -33,10 +34,11 @@ def calculate_energy(n: int, j: int, k: int) -> float:
     return energy
 
 
-if __name__ == "__main__":
-    pd.options.plotting.backend = "plotly"
+def two_dimensional_plot(n: int) -> None:
+    """
+    Plot all possible I-graphs (n,j,k) given a value for n.
+    """
 
-    n = 1000
     data = []
 
     for k in range(floor(n / 2) + 1):
@@ -47,9 +49,45 @@ if __name__ == "__main__":
     df = pd.DataFrame(columns=["(j,k)", "Energy"], data=data)
 
     fig = df.plot.line(
-        x="(j,k)", 
+        x="(j,k)",
         y="Energy",
         title=f"Energy of I({n},j,k) With All Possible (j,k) Values",
     )
-    fig.update_layout(xaxis_type='category')
-    fig.write_html("energy_plot.html")
+    fig.update_layout(xaxis_type="category")
+    fig.write_html(f"energy_plot_{n}.html")
+
+
+def three_dimensional_plot(n: int) -> None:
+    """
+    3D surface plot of energies for I(n,j,k)
+    """
+
+    energies = [[0 for _ in range(floor(n / 2) + 1)] for _ in range(floor(n / 2) + 1)]
+
+    for k in range(floor(n / 2) + 1):
+        for j in range(k + 1):
+            energies[k][j] = calculate_energy(n, j, k)
+
+    fig = go.Figure(
+        go.Surface(
+            contours={
+                "x": {
+                    "show": True,
+                    "start": 1.5,
+                    "end": 2,
+                    "size": 0.04,
+                    "color": "white",
+                },
+                "z": {"show": True, "start": 0.5, "end": 0.8, "size": 0.05},
+            },
+            x=list(range(floor(n / 2) + 1)),
+            y=list(range(floor(n / 2) + 1)),
+            z=energies,
+        )
+    )
+    fig.write_html(f"3d_energy_plot_{n}.html")
+
+
+if __name__ == "__main__":
+    pd.options.plotting.backend = "plotly"
+    three_dimensional_plot(50)
