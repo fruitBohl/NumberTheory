@@ -1,4 +1,5 @@
-from math import cos, pi, sqrt, floor
+from math import cos, floor, pi, sqrt, gcd
+
 import pandas as pd
 import plotly.graph_objects as go
 
@@ -62,10 +63,23 @@ def three_dimensional_energy_plot(n: int) -> None:
     """
 
     energies = [[0 for _ in range(floor(n / 2) + 1)] for _ in range(floor(n / 2) + 1)]
+    energy_set = set()
+    count = 0
 
     for k in range(floor(n / 2) + 1):
         for j in range(k + 1):
-            energies[k][j] = calculate_energy(n, j, k)
+            if gcd(gcd(k, j), n) == 1:
+                count += 1
+                energies[k][j] = calculate_energy(n, j, k)
+
+    for k in range(floor(n / 2) + 1):
+        for j in range(k + 1):
+            energy_set.add(round(energies[k][j], 3))
+
+    print(
+        f"All possible energies of I({n},j,k)", energy_set, f"Size is {len(energy_set)}"
+    )
+    print(f"Number of I-graphs = {count}")
 
     fig = go.Figure(
         go.Surface(
@@ -82,7 +96,7 @@ def three_dimensional_energy_plot(n: int) -> None:
     fig.update_layout(
         title=f"Energy of I({n},j,k) With All Possible (j,k) Values",
         scene=dict(
-            zaxis=dict(range=[2.75 * n, 4.25 * n]),
+            zaxis=dict(range=[2.25 * n, 4.25 * n]),
             xaxis_title="j Value",
             yaxis_title="k Value",
             zaxis_title="Energy",
@@ -93,4 +107,10 @@ def three_dimensional_energy_plot(n: int) -> None:
 
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
-    three_dimensional_energy_plot(113)
+    three_dimensional_energy_plot(12)
+
+    # TODO: plot histogram of all different energies and amount of I-graphs which have
+    # that corresponding energy
+
+    # number of I-graphs in I(n,j,k) is the (floor(n / 2)/2)*(floor(n / 2)/2 - 1)/2
+    #  triangular number if n is prime
