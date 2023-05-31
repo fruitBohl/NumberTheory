@@ -54,6 +54,7 @@ def two_dimensional_eigenvalue_plot(n: int, j: int, k: int) -> None:
     )
     fig.write_html(f"eigenvalue_plot_{n}_{j}_{k}.html")
 
+
 def two_dimensional_energy_plot(n: int) -> None:
     """
     Plot all possible I-graphs (n,j,k) given a value for n.
@@ -127,11 +128,10 @@ def three_dimensional_energy_plot(n: int) -> None:
 
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
-    two_dimensional_eigenvalue_plot(1200 ,300,293)
+    two_dimensional_eigenvalue_plot(1200, 300, 293)
 
     # TODO: plot histogram of all different energies and amount of I-graphs which have
     # that corresponding energy
-
 
     # Some Conjectures:
     # 1. number of I-graphs in I(n,j,k) is the (floor(n / 2)/2)*(floor(n / 2)/2 - 1)/2
