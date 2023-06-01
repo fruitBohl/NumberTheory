@@ -34,6 +34,25 @@ def calculate_energy(n: int, j: int, k: int) -> float:
     return energy
 
 
+def calculate_graph_with_smallest_second_eigenvalue(n: int) -> tuple[int, int]:
+    """
+    takes an 'n' value as an input an calculates the respective j and k values which
+    correspond to the graph with the smallest, second largest eigenvalue.
+
+    This function will also graph the eigenvalues of this graph.
+    """
+
+    j, k = 0
+
+    for k in range(floor(n / 2) + 1):
+        for j in range(k + 1):
+            print(j, k)
+
+    two_dimensional_eigenvalue_plot(n, j, k)
+
+    return (j, k)
+
+
 def two_dimensional_eigenvalue_plot(n: int, j: int, k: int) -> None:
     """
     Plot all eigenvalues of the graph I(n,j,k)
@@ -128,7 +147,7 @@ def three_dimensional_energy_plot(n: int) -> None:
 
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
-    two_dimensional_eigenvalue_plot(1200, 300, 293)
+    two_dimensional_eigenvalue_plot(113, 15, 30)
 
     # TODO: plot histogram of all different energies and amount of I-graphs which have
     # that corresponding energy
