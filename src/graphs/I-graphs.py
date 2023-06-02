@@ -18,6 +18,23 @@ def calculate_eigenvalue(n: int, j: int, k: int, l: int) -> tuple[float, float]:
     )
 
 
+def calculate_eigenvalues(n: int, j: int, k: int) -> list[float]:
+    """
+    Calculate an ordered list (from biggest to smallest) of all the eigenvalues of the graph
+    I(n,j,k).
+    """
+
+    eigenvalues = []
+
+    for l in range(n):
+        (pos_eigenvalue, neg_eigenvalue) = calculate_eigenvalue(n, j, k, l)
+        eigenvalues.append(pos_eigenvalue)
+        eigenvalues.append(neg_eigenvalue)
+    eigenvalues.sort(reverse=True)
+
+    return eigenvalues
+
+
 def calculate_energy(n: int, j: int, k: int) -> float:
     """
     Calculate the energy of I(n,j,k) where  n>=3, 1<=j<=k<n/2. This is just the sum
@@ -42,15 +59,23 @@ def calculate_graph_with_smallest_second_eigenvalue(n: int) -> tuple[int, int]:
     This function will also graph the eigenvalues of this graph.
     """
 
-    j, k = 0
+    final_j = 0
+    final_k = 0
+    second_largest_eigenvalue = 1e15
 
     for k in range(floor(n / 2) + 1):
         for j in range(k + 1):
-            print(j, k)
+            if gcd(gcd(k, j), n) == 1:
+                ordered_eigenvalues = calculate_eigenvalues(n, j, k)
 
-    two_dimensional_eigenvalue_plot(n, j, k)
+                if ordered_eigenvalues[1] < second_largest_eigenvalue:
+                    second_largest_eigenvalue = ordered_eigenvalues[1]
+                    final_j = j
+                    final_k = k
 
-    return (j, k)
+    two_dimensional_eigenvalue_plot(n, final_j, final_k)
+
+    return (n, final_j, final_k), second_largest_eigenvalue
 
 
 def two_dimensional_eigenvalue_plot(n: int, j: int, k: int) -> None:
@@ -147,7 +172,19 @@ def three_dimensional_energy_plot(n: int) -> None:
 
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
-    two_dimensional_eigenvalue_plot(113, 15, 30)
+
+    multiples_of_three = [3 * n for n in range(1, 51)]
+
+    multiples_of_two = [2 * n for n in range(1, 51)]
+
+    multiples_of_five = [5 * n for n in range(1, 51)]
+
+    multiples_of_twelve = [12 * n for n in range(1, 32)]
+
+    squares = [n * n for n in range(2, 51)]
+
+    for n in multiples_of_twelve:
+        print(calculate_graph_with_smallest_second_eigenvalue(n))
 
     # TODO: plot histogram of all different energies and amount of I-graphs which have
     # that corresponding energy
