@@ -71,7 +71,7 @@ def two_dimensional_eigenvalue_plot(n: int, j: int, k: int) -> None:
         y="Eigenvalue",
         title=f"Eigenvalues of I({n},{j},{k}) Evaluated at Positive Square Root",
     )
-    fig.write_html(f"eigenvalue_plot_{n}_{j}_{k}.html")
+    fig.write_html(f"visualisations/eigenvalue_plot_{n}_{j}_{k}.html")
 
 
 def two_dimensional_energy_plot(n: int) -> None:
@@ -94,7 +94,7 @@ def two_dimensional_energy_plot(n: int) -> None:
         title=f"Energy of I({n},j,k) With All Possible (j,k) Values",
     )
     fig.update_layout(xaxis_type="category")
-    fig.write_html(f"energy_plot_{n}.html")
+    fig.write_html(f"visualisations/energy_plot_{n}.html")
 
 
 def three_dimensional_energy_plot(n: int) -> None:
@@ -142,12 +142,12 @@ def three_dimensional_energy_plot(n: int) -> None:
             zaxis_title="Energy",
         ),
     )
-    fig.write_html(f"3d_energy_plot_{n}.html")
+    fig.write_html(f"visualisations/`3d_energy_plot_{n}.html")
 
 
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
-    two_dimensional_eigenvalue_plot(113, 15, 30)
+    two_dimensional_eigenvalue_plot(5, 3, 3)
 
     # TODO: plot histogram of all different energies and amount of I-graphs which have
     # that corresponding energy
