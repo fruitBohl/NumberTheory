@@ -4,6 +4,13 @@ import pandas as pd
 import plotly.graph_objects as go
 
 
+# Some Conjectures:
+# 1. number of I-graphs in I(n,j,k) is the (floor(n / 2)/2)*(floor(n / 2)/2 - 1)/2
+#    triangular number if n is prime (less otherwise)
+# 2. As n->infinity the energies for all possible I-graphs with n value
+#    group around n*(3+1/30).
+
+
 def calculate_eigenvalue(n: int, j: int, k: int, l: int) -> tuple[float, float]:
     """
     Calculate both (+/- sqrt) eigenvalues of I(n,j,k) given l.
@@ -20,8 +27,8 @@ def calculate_eigenvalue(n: int, j: int, k: int, l: int) -> tuple[float, float]:
 
 def calculate_eigenvalues(n: int, j: int, k: int) -> list[float]:
     """
-    Calculate an ordered list (from biggest to smallest) of all the eigenvalues of the graph
-    I(n,j,k).
+    Calculate an ordered list (from biggest to smallest) of all the eigenvalues of the
+    graph I(n,j,k).
     """
 
     eigenvalues = []
@@ -48,7 +55,40 @@ def calculate_energy(n: int, j: int, k: int) -> float:
         energy += abs(pos_eigenvalue)
         energy += abs(neg_eigenvalue)
 
-    return energy
+    return round(energy, 4)
+
+
+def energy_distribution(n: int) -> None:
+    """
+    Plot histogram of all different energies and amount of I-graphs which have
+    that corresponding energy.
+    """
+
+    energy_counts = {}
+    count = 0
+
+    for k in range(floor(n / 2) + 1):
+        for j in range(k + 1):
+            if gcd(gcd(k, j), n) == 1:
+                count += 1
+                energy = calculate_energy(n, j, k)
+                if energy in energy_counts.keys():
+                    energy_counts[energy] += 1
+                else:
+                    energy_counts[energy] = 1
+
+    energy_counts_df = pd.DataFrame(
+        [(energy, count) for energy, count in energy_counts.items()],
+        columns=["energy", "count"],
+    )
+
+    fig = energy_counts_df.plot.hist(
+        y="count",
+        x="energy",
+        title=f"Distribution of Energies For I-Graphs With n={n}",
+    )
+    fig.write_html(f"visualisations/energy_dist_{n}.html")
+    print(count)
 
 
 def calculate_graph_with_smallest_second_eigenvalue(n: int) -> tuple[int, int]:
@@ -75,7 +115,7 @@ def calculate_graph_with_smallest_second_eigenvalue(n: int) -> tuple[int, int]:
 
     two_dimensional_eigenvalue_plot(n, final_j, final_k)
 
-    return (n, final_j, final_k), second_largest_eigenvalue
+    return (n, final_j, final_k), round(second_largest_eigenvalue, 4)
 
 
 def two_dimensional_eigenvalue_plot(n: int, j: int, k: int) -> None:
@@ -173,18 +213,13 @@ def three_dimensional_energy_plot(n: int) -> None:
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
 
-    multiples_of_three = [3 * n for n in range(1, 51)]
-    multiples_of_two = [2 * n for n in range(1, 51)]
-    multiples_of_five = [5 * n for n in range(1, 51)]
-    multiples_of_twelve = [12 * n for n in range(1, 32)]
-    squares = [n * n for n in range(2, 51)]
+    # multiples_of_three = [3 * n for n in range(1, 51)]
+    # multiples_of_two = [2 * n for n in range(1, 51)]
+    # multiples_of_five = [5 * n for n in range(1, 51)]
+    # multiples_of_twelve = [12 * n for n in range(1, 32)]
+    # squares = [n * n for n in range(2, 51)]
 
-    for n in multiples_of_twelve:
-        print(calculate_graph_with_smallest_second_eigenvalue(n))
+    # for n in range(3,150):
+    #     print(calculate_graph_with_smallest_second_eigenvalue(n))
 
-    # TODO: plot histogram of all different energies and amount of I-graphs which have
-    # that corresponding energy
-
-    # Some Conjectures:
-    # 1. number of I-graphs in I(n,j,k) is the (floor(n / 2)/2)*(floor(n / 2)/2 - 1)/2
-    #  triangular number if n is prime
+    energy_distribution(2111)
