@@ -50,8 +50,8 @@ def tuple_square(n: int, first_val: int, constrain_first: bool, supress_output: 
 
     output = "("
     for i, n in enumerate(N):
-        output += str(int (X[n].x))
-        if i+1 != len(N):
+        output += str(int(X[n].x))
+        if i + 1 != len(N):
             output += ", "
     output += ")"
     print("")

@@ -174,13 +174,9 @@ if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
 
     multiples_of_three = [3 * n for n in range(1, 51)]
-
     multiples_of_two = [2 * n for n in range(1, 51)]
-
     multiples_of_five = [5 * n for n in range(1, 51)]
-
     multiples_of_twelve = [12 * n for n in range(1, 32)]
-
     squares = [n * n for n in range(2, 51)]
 
     for n in multiples_of_twelve:
