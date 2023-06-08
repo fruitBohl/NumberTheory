@@ -254,20 +254,35 @@ def num_I_graphs_two_primes(p, q) -> int:
     return num_I_graphs_prime(p * q) - (num_I_graphs_prime(p) + num_I_graphs_prime(q))
 
 
+def num_I_graphs_brute_force(n) -> int:
+    """
+    Brute force calculates the number of possible I-graphs with a particular n value.
+    """
+
+    count = 0
+
+    for k in range(floor(n / 2) + 1):
+        for j in range(k + 1):
+            if gcd(gcd(k, j), n) == 1:
+                count += 1
+
+    return count
+
+
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
 
-    # for i in primerange(3, 50):
-    #     for j in primerange(3, 50):
-    #         if i != j:
-    #             print(
-    #                 f"n={i*j} with: {energy_distribution(i*j)} and estimated {num_I_graphs_two_primes(i,j)}"
-    #             )
-
     for i in primerange(3, 50):
-        print(
-            f"n={i*i} with: {energy_distribution(i*i)} and estimated {num_I_graphs_prime_squared(i*i)}"
-        )
+        for j in primerange(3, i + 1):
+            if i != j:
+                print(
+                    f"n={i*j} with: {num_I_graphs_brute_force(i*j)} and estimated {num_I_graphs_two_primes(i,j)}"
+                )
+
+    # for i in primerange(3, 100):
+    #     print(
+    #         f"n={i*i} with: {num_I_graphs_brute_force(i*i)} and estimated {num_I_graphs_prime_squared(i*i)}"
+    #     )
     # x = 0
     # for n in [2, 3, 4, 5, 6, 8, 9, 10, 12, 14, 15]:
     #     x += n - phi(n) + 1
