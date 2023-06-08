@@ -1,84 +1,27 @@
 from math import cos, floor, pi, sqrt, gcd, ceil, comb
-
+from I_graph_processes import (
+    gcd,
+    is_coprime,
+    phi,
+    I_eigenvalue,
+    I_eigenvalues,
+    I_energy,
+    num_I_graphs_prime,
+    num_I_graphs_prime_squared,
+    num_I_graphs_two_primes,
+    num_I_graphs_brute_force,
+)
 import pandas as pd
 import plotly.graph_objects as go
 from sympy import primerange
 
 
 # Some Conjectures:
-# 1. number of I-graphs in I(n,j,k) is the (floor(n / 2)/2)*(floor(n / 2)/2 - 1)/2
-#    triangular number if n is prime (less otherwise)
 # 2. As n->infinity the energies for all possible I-graphs with n value
 #    group around n*(3+1/30).
 
 
-def gcd(p, q):
-    # Create the gcd of two positive integers.
-    while q != 0:
-        p, q = q, p % q
-    return p
-
-
-def is_coprime(x, y):
-    return gcd(x, y) == 1
-
-
-def phi(x):
-    if x == 1:
-        return 1
-    else:
-        n = [y for y in range(1, x) if is_coprime(x, y)]
-        return len(n)
-
-
-def calculate_eigenvalue(n: int, j: int, k: int, l: int) -> tuple[float, float]:
-    """
-    Calculate both (+/- sqrt) eigenvalues of I(n,j,k) given l.
-    """
-
-    arg = (2 * pi * l) / n
-    sqrt_component = sqrt((cos(arg * j) - cos(arg * k)) ** 2 + 1)
-
-    return (
-        cos(arg * j) + cos(arg * k) + sqrt_component,
-        cos(arg * j) + cos(arg * k) - sqrt_component,
-    )
-
-
-def calculate_eigenvalues(n: int, j: int, k: int) -> list[float]:
-    """
-    Calculate an ordered list (from biggest to smallest) of all the eigenvalues of the
-    graph I(n,j,k).
-    """
-
-    eigenvalues = []
-
-    for l in range(n):
-        (pos_eigenvalue, neg_eigenvalue) = calculate_eigenvalue(n, j, k, l)
-        eigenvalues.append(pos_eigenvalue)
-        eigenvalues.append(neg_eigenvalue)
-    eigenvalues.sort(reverse=True)
-
-    return eigenvalues
-
-
-def calculate_energy(n: int, j: int, k: int) -> float:
-    """
-    Calculate the energy of I(n,j,k) where  n>=3, 1<=j<=k<n/2. This is just the sum
-    of the absolute value of all eigenvalues of the I-Graph.
-    """
-
-    energy = 0
-
-    for l in range(n):
-        (pos_eigenvalue, neg_eigenvalue) = calculate_eigenvalue(n, j, k, l)
-        energy += abs(pos_eigenvalue)
-        energy += abs(neg_eigenvalue)
-
-    return round(energy, 4)
-
-
-def energy_distribution(n: int) -> int:
+def I_energy_distribution(n: int) -> int:
     """
     Plot histogram of all different energies and amount of I-graphs which have
     that corresponding energy.
@@ -91,7 +34,7 @@ def energy_distribution(n: int) -> int:
         for j in range(k + 1):
             if gcd(gcd(k, j), n) == 1:
                 count += 1
-                energy = calculate_energy(n, j, k)
+                energy = I_energy(n, j, k)
                 if energy in energy_counts.keys():
                     energy_counts[energy] += 1
                 else:
@@ -111,7 +54,7 @@ def energy_distribution(n: int) -> int:
     return count
 
 
-def calculate_graph_with_smallest_second_eigenvalue(n: int) -> tuple[int, int]:
+def I_graph_with_smallest_second_eigenvalue(n: int) -> tuple[int, int]:
     """
     takes an 'n' value as an input an calculates the respective j and k values which
     correspond to the graph with the smallest, second largest eigenvalue.
@@ -126,7 +69,7 @@ def calculate_graph_with_smallest_second_eigenvalue(n: int) -> tuple[int, int]:
     for k in range(floor(n / 2) + 1):
         for j in range(k + 1):
             if gcd(gcd(k, j), n) == 1:
-                ordered_eigenvalues = calculate_eigenvalues(n, j, k)
+                ordered_eigenvalues = I_eigenvalues(n, j, k)
 
                 if ordered_eigenvalues[1] < second_largest_eigenvalue:
                     second_largest_eigenvalue = ordered_eigenvalues[1]
@@ -146,7 +89,7 @@ def two_dimensional_eigenvalue_plot(n: int, j: int, k: int) -> None:
     data = []
 
     for l in range(n):
-        (pos_eigenvalue, _) = calculate_eigenvalue(n, j, k, l)
+        (pos_eigenvalue, _) = I_eigenvalue(n, j, k, l)
         data.append([l, pos_eigenvalue])
 
     df = pd.DataFrame(columns=["l-value", "Eigenvalue"], data=data)
@@ -168,7 +111,7 @@ def two_dimensional_energy_plot(n: int) -> None:
 
     for k in range(floor(n / 2) + 1):
         for j in range(k + 1):
-            energy = calculate_energy(n, j, k)
+            energy = I_energy(n, j, k)
             data.append([f"({j},{k})", energy])
 
     df = pd.DataFrame(columns=["(j,k)", "Energy"], data=data)
@@ -195,7 +138,7 @@ def three_dimensional_energy_plot(n: int) -> None:
         for j in range(k + 1):
             if gcd(gcd(k, j), n) == 1:
                 count += 1
-                energies[k][j] = calculate_energy(n, j, k)
+                energies[k][j] = I_energy(n, j, k)
 
     for k in range(floor(n / 2) + 1):
         for j in range(k + 1):
@@ -227,57 +170,26 @@ def three_dimensional_energy_plot(n: int) -> None:
             zaxis_title="Energy",
         ),
     )
-    fig.write_html(f"visualisations/`3d_energy_plot_{n}.html")
-
-
-def num_I_graphs_prime(n) -> int:
-    """
-    Number of I-graphs where n is a prime.
-    """
-
-    return comb(int(ceil(n / 2) + 1), 2) - 1
-
-
-def num_I_graphs_prime_squared(n) -> int:
-    """
-    Number of I-graphs where n is a prime squared.
-    """
-
-    return num_I_graphs_prime(n) - num_I_graphs_prime(int(sqrt(n)))
-
-
-def num_I_graphs_two_primes(p, q) -> int:
-    """
-    Number of I-graphs where n is the product of two primes.
-    """
-
-    return num_I_graphs_prime(p * q) - (num_I_graphs_prime(p) + num_I_graphs_prime(q))
-
-
-def num_I_graphs_brute_force(n) -> int:
-    """
-    Brute force calculates the number of possible I-graphs with a particular n value.
-    """
-
-    count = 0
-
-    for k in range(floor(n / 2) + 1):
-        for j in range(k + 1):
-            if gcd(gcd(k, j), n) == 1:
-                count += 1
-
-    return count
+    fig.write_html(f"visualisations/3d_energy_plot_{n}.html")
 
 
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
 
-    for i in primerange(3, 50):
-        for j in primerange(3, i + 1):
-            if i != j:
-                print(
-                    f"n={i*j} with: {num_I_graphs_brute_force(i*j)} and estimated {num_I_graphs_two_primes(i,j)}"
-                )
+    # for i in primerange(3, 50):
+    #     for j in primerange(3, i + 1):
+    #         if i != j:
+    print(
+        f"n={81} with: {num_I_graphs_brute_force(81)} estimated {num_I_graphs_prime(81)}"
+    )
+
+    # 3^4
+
+    print(f"n={3} with: {num_I_graphs_brute_force(3)}")
+
+    print(f"n={9} with: {num_I_graphs_brute_force(9)}")
+
+    print(f"n={27} with: {num_I_graphs_brute_force(27)}")
 
     # for i in primerange(3, 100):
     #     print(
