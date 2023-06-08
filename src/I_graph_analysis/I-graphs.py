@@ -243,7 +243,7 @@ def num_I_graphs_prime_squared(n) -> int:
     Number of I-graphs where n is a prime squared.
     """
 
-    return num_I_graphs_prime(n) - comb(int(ceil(int(sqrt(n)) / 2) + 1), 2)
+    return num_I_graphs_prime(n) - num_I_graphs_prime(int(sqrt(n)))
 
 
 def num_I_graphs_two_primes(p, q) -> int:
@@ -257,12 +257,17 @@ def num_I_graphs_two_primes(p, q) -> int:
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
 
+    # for i in primerange(3, 50):
+    #     for j in primerange(3, 50):
+    #         if i != j:
+    #             print(
+    #                 f"n={i*j} with: {energy_distribution(i*j)} and estimated {num_I_graphs_two_primes(i,j)}"
+    #             )
+
     for i in primerange(3, 50):
-        for j in primerange(3, 50):
-            if i != j:
-                print(
-                    f"n={i*j} with: {energy_distribution(i*j)} and estimated {num_I_graphs_two_primes(i,j)}"
-                )
+        print(
+            f"n={i*i} with: {energy_distribution(i*i)} and estimated {num_I_graphs_prime_squared(i*i)}"
+        )
     # x = 0
     # for n in [2, 3, 4, 5, 6, 8, 9, 10, 12, 14, 15]:
     #     x += n - phi(n) + 1
