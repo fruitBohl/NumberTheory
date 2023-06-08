@@ -1,4 +1,4 @@
-from math import cos, floor, pi, sqrt, gcd
+from math import cos, floor, pi, sqrt, gcd, ceil, comb
 
 import pandas as pd
 import plotly.graph_objects as go
@@ -235,16 +235,35 @@ def num_I_graphs_prime(n) -> int:
     Number of I-graphs where n is a prime.
     """
 
-    return int(((floor(n / 2) + 1) * (floor(n / 2) + 2)) / 2 - 1)
+    return comb(int(ceil(n / 2) + 1), 2) - 1
+
+
+def num_I_graphs_prime_squared(n) -> int:
+    """
+    Number of I-graphs where n is a prime squared.
+    """
+
+    return num_I_graphs_prime(n) - comb(int(ceil(int(sqrt(n)) / 2) + 1), 2)
+
+
+def num_I_graphs_two_primes(p, q) -> int:
+    """
+    Number of I-graphs where n is the product of two primes.
+    """
+
+    return num_I_graphs_prime(p * q) - (num_I_graphs_prime(p) + num_I_graphs_prime(q))
 
 
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
 
-    print(
-        f"n={105} with: {energy_distribution(105)} and estimated {num_I_graphs_prime(105)}"
-    )
-    x = 0
-    for n in [2, 3, 4, 5, 6, 8, 9, 10, 12, 14, 15]:
-        x += n - phi(n) + 1
-    print(x)
+    for i in primerange(3, 50):
+        for j in primerange(3, 50):
+            if i != j:
+                print(
+                    f"n={i*j} with: {energy_distribution(i*j)} and estimated {num_I_graphs_two_primes(i,j)}"
+                )
+    # x = 0
+    # for n in [2, 3, 4, 5, 6, 8, 9, 10, 12, 14, 15]:
+    #     x += n - phi(n) + 1
+    # print(x)
