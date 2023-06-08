@@ -2,6 +2,7 @@ from math import cos, floor, pi, sqrt, gcd
 
 import pandas as pd
 import plotly.graph_objects as go
+from sympy import primerange
 
 
 # Some Conjectures:
@@ -58,7 +59,7 @@ def calculate_energy(n: int, j: int, k: int) -> float:
     return round(energy, 4)
 
 
-def energy_distribution(n: int) -> None:
+def energy_distribution(n: int) -> int:
     """
     Plot histogram of all different energies and amount of I-graphs which have
     that corresponding energy.
@@ -82,13 +83,13 @@ def energy_distribution(n: int) -> None:
         columns=["energy", "count"],
     )
 
-    fig = energy_counts_df.plot.hist(
+    fig = energy_counts_df.plot.scatter(
         y="count",
         x="energy",
         title=f"Distribution of Energies For I-Graphs With n={n}",
     )
     fig.write_html(f"visualisations/energy_dist_{n}.html")
-    print(count)
+    return count
 
 
 def calculate_graph_with_smallest_second_eigenvalue(n: int) -> tuple[int, int]:
@@ -210,6 +211,14 @@ def three_dimensional_energy_plot(n: int) -> None:
     fig.write_html(f"visualisations/`3d_energy_plot_{n}.html")
 
 
+def estimated_num_I_graphs(n) -> int:
+    """
+    Number of I-graphs where n is a prime.
+    """
+
+    return int(((floor(n / 2) + 1) * (floor(n / 2) + 2)) / 2 - 1)
+
+
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
 
@@ -217,9 +226,12 @@ if __name__ == "__main__":
     # multiples_of_two = [2 * n for n in range(1, 51)]
     # multiples_of_five = [5 * n for n in range(1, 51)]
     # multiples_of_twelve = [12 * n for n in range(1, 32)]
-    # squares = [n * n for n in range(2, 51)]
+    squares = [n * n for n in primerange(2, 100)]
 
-    # for n in range(3,150):
-    #     print(calculate_graph_with_smallest_second_eigenvalue(n))
-
-    energy_distribution(2111)
+    for n in squares:
+        dist = energy_distribution(n)
+        num_graphs = estimated_num_I_graphs(n)
+        print(
+            f"n={n} with: {energy_distribution(n)} and estimated {estimated_num_I_graphs(n)}"
+        )
+        # print(calculate_graph_with_smallest_second_eigenvalue(n))
