@@ -12,6 +12,25 @@ from sympy import primerange
 #    group around n*(3+1/30).
 
 
+def gcd(p, q):
+    # Create the gcd of two positive integers.
+    while q != 0:
+        p, q = q, p % q
+    return p
+
+
+def is_coprime(x, y):
+    return gcd(x, y) == 1
+
+
+def phi(x):
+    if x == 1:
+        return 1
+    else:
+        n = [y for y in range(1, x) if is_coprime(x, y)]
+        return len(n)
+
+
 def calculate_eigenvalue(n: int, j: int, k: int, l: int) -> tuple[float, float]:
     """
     Calculate both (+/- sqrt) eigenvalues of I(n,j,k) given l.
@@ -211,7 +230,7 @@ def three_dimensional_energy_plot(n: int) -> None:
     fig.write_html(f"visualisations/`3d_energy_plot_{n}.html")
 
 
-def estimated_num_I_graphs(n) -> int:
+def num_I_graphs_prime(n) -> int:
     """
     Number of I-graphs where n is a prime.
     """
@@ -222,16 +241,10 @@ def estimated_num_I_graphs(n) -> int:
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
 
-    # multiples_of_three = [3 * n for n in range(1, 51)]
-    # multiples_of_two = [2 * n for n in range(1, 51)]
-    # multiples_of_five = [5 * n for n in range(1, 51)]
-    # multiples_of_twelve = [12 * n for n in range(1, 32)]
-    squares = [n * n for n in primerange(2, 100)]
-
-    for n in squares:
-        dist = energy_distribution(n)
-        num_graphs = estimated_num_I_graphs(n)
-        print(
-            f"n={n} with: {energy_distribution(n)} and estimated {estimated_num_I_graphs(n)}"
-        )
-        # print(calculate_graph_with_smallest_second_eigenvalue(n))
+    print(
+        f"n={105} with: {energy_distribution(105)} and estimated {num_I_graphs_prime(105)}"
+    )
+    x = 0
+    for n in [2, 3, 4, 5, 6, 8, 9, 10, 12, 14, 15]:
+        x += n - phi(n) + 1
+    print(x)
