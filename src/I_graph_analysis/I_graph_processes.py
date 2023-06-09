@@ -95,13 +95,19 @@ def num_I_graphs_two_primes(p, q) -> int:
 
 def num_I_graphs_brute_force(n) -> int:
     """
-    Brute force calculates the number of possible I-graphs with a particular n value.
+    Brute force calculates the number of possible unique I-graphs with
+    a particular n value.
     """
     count = 0
 
-    for k in range(floor(n / 2) + 1):
-        for j in range(k + 1):
-            if gcd(gcd(k, j), n) == 1:
-                count += 1
-
+    if n % 2 == 0:
+        for k in range(floor(n / 2)):
+            for j in range(k + 1):
+                if gcd(gcd(k, j), n) == 1:
+                    count += 1
+    else:
+        for k in range(floor(n / 2) + 1):
+            for j in range(k + 1):
+                if gcd(gcd(k, j), n) == 1:
+                    count += 1
     return count
