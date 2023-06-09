@@ -1,5 +1,7 @@
-from math import cos, sqrt, pi, comb, ceil, floor
+from math import cos, sqrt, pi, comb, ceil, floor, prod
 from itertools import combinations
+from sympy import isprime
+from sympy.ntheory import factorint
 
 
 def gcd(p: int, q: int) -> int:
@@ -73,30 +75,9 @@ def I_energy(n: int, j: int, k: int) -> float:
     return round(energy, 4)
 
 
-def num_I_graphs_prime(p) -> int:
-    """
-    Number of I-graphs where n is a prime.
-    """
-    return comb(int(ceil(p / 2) + 1), 2) - 1
-
-
-def num_I_graphs_prime_squared(n) -> int:
-    """
-    Number of I-graphs where n is a prime squared.
-    """
-    return num_I_graphs_prime(n) - num_I_graphs_prime(int(sqrt(n)))
-
-
-def num_I_graphs_two_primes(p, q) -> int:
-    """
-    Number of I-graphs where n is the product of two primes.
-    """
-    return num_I_graphs_prime(p * q) - (num_I_graphs_prime(p) + num_I_graphs_prime(q))
-
-
 def num_I_graphs_brute_force(n) -> int:
     """
-    Brute force calculates the number of possible unique I-graphs with
+    Brute force calculates the number of possible unique connected I-graphs with
     a particular n value.
     """
     count = 0
@@ -114,38 +95,26 @@ def num_I_graphs_brute_force(n) -> int:
     return count
 
 
-def num_I_graphs_general(n_prime_decomp: list[tuple[int, int]]) -> int:
-    """
-    Returns the number of connected I-graphs given I(n,j,k). TODO: currently only works
-    for numbers with a prime decomposition with all primes with power 1.
+def num_I_graphs_recursive(n: int) -> int:
     """
 
-    n = 1
-    count = 0
+    Base Case: if n is a prime, simply return comb(int(ceil(p / 2) + 1), 2) - 1
+    Recursive Case: loop over all factors of n and calculate the
+                    sum for all factors f of (num_I_graphs_recursive(f))
+                return comb(int(ceil(p / 2) + 1), 2) + sum(num_I_graphs_recursive(f)) - 1
+    """
 
-    primes = []
+    if isprime(n):
+        return comb(int(ceil(n / 2) + 1), 2) - 1
 
-    for p, a in n_prime_decomp:
-        primes.append(p)
-        n *= p**a
-    count = num_I_graphs_prime(n)
+    subproblems = 0
+    prime_factors = factorint(n, multiple=True)
 
-    print(count)
+    for num in range(2, len(prime_factors)):
+        for factor in set([prod(x) for x in combinations(prime_factors, num)]):
+            subproblems += num_I_graphs_recursive(factor)
 
-    for num_to_choose in range(2, max(len(primes), 3)):
-        for subset in combinations(primes, num_to_choose):
-            n_sub = 1
-            sub_count = 0
-            for prime in subset:
-                sub_count -= num_I_graphs_prime(prime)
-                n_sub *= prime
-            sub_count += num_I_graphs_prime(n_sub)
+    for prime in factorint(n):
+        subproblems += num_I_graphs_recursive(prime)
 
-            count -= sub_count
-            print(num_I_graphs_prime(n_sub), sub_count)
-
-    for prime in primes:
-        count -= num_I_graphs_prime(prime)
-        print(num_I_graphs_prime(prime), count)
-
-    return count
+    return comb(int(ceil(n / 2) + 1), 2) - (subproblems + 1)

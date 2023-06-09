@@ -1,19 +1,14 @@
-from math import cos, floor, pi, sqrt, gcd, ceil, comb
+from math import floor, gcd
 from I_graph_processes import (
     gcd,
-    is_coprime,
-    phi,
     I_eigenvalue,
     I_eigenvalues,
     I_energy,
-    num_I_graphs_prime,
-    num_I_graphs_prime_squared,
-    num_I_graphs_two_primes,
     num_I_graphs_brute_force,
+    num_I_graphs_recursive,
 )
 import pandas as pd
 import plotly.graph_objects as go
-from sympy import primerange
 
 
 # Some Conjectures:
@@ -176,26 +171,8 @@ def three_dimensional_energy_plot(n: int) -> None:
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
 
-    # for i in primerange(3, 50):
-    #     for j in primerange(3, i + 1):
-    #         if i != j:
-    print(
-        f"n={81} with: {num_I_graphs_brute_force(81)} estimated {num_I_graphs_prime(81)}"
-    )
-
-    # 3^4
-
-    print(f"n={3} with: {num_I_graphs_brute_force(3)}")
-
-    print(f"n={9} with: {num_I_graphs_brute_force(9)}")
-
-    print(f"n={27} with: {num_I_graphs_brute_force(27)}")
-
-    # for i in primerange(3, 100):
-    #     print(
-    #         f"n={i*i} with: {num_I_graphs_brute_force(i*i)} and estimated {num_I_graphs_prime_squared(i*i)}"
-    #     )
-    # x = 0
-    # for n in [2, 3, 4, 5, 6, 8, 9, 10, 12, 14, 15]:
-    #     x += n - phi(n) + 1
-    # print(x)
+    for n in range(3, 1000):
+        if num_I_graphs_recursive(n) != num_I_graphs_brute_force(n):
+            print("n ", n)
+            print("attempt ", num_I_graphs_recursive(n))
+            print("actual ", num_I_graphs_brute_force(n))
