@@ -1,4 +1,5 @@
 from math import cos, sqrt, pi, comb, ceil, floor
+from itertools import combinations
 
 
 def gcd(p: int, q: int) -> int:
@@ -110,4 +111,41 @@ def num_I_graphs_brute_force(n) -> int:
             for j in range(k + 1):
                 if gcd(gcd(k, j), n) == 1:
                     count += 1
+    return count
+
+
+def num_I_graphs_general(n_prime_decomp: list[tuple[int, int]]) -> int:
+    """
+    Returns the number of connected I-graphs given I(n,j,k). TODO: currently only works
+    for numbers with a prime decomposition with all primes with power 1.
+    """
+
+    n = 1
+    count = 0
+
+    primes = []
+
+    for p, a in n_prime_decomp:
+        primes.append(p)
+        n *= p**a
+    count = num_I_graphs_prime(n)
+
+    print(count)
+
+    for num_to_choose in range(2, max(len(primes), 3)):
+        for subset in combinations(primes, num_to_choose):
+            n_sub = 1
+            sub_count = 0
+            for prime in subset:
+                sub_count -= num_I_graphs_prime(prime)
+                n_sub *= prime
+            sub_count += num_I_graphs_prime(n_sub)
+
+            count -= sub_count
+            print(num_I_graphs_prime(n_sub), sub_count)
+
+    for prime in primes:
+        count -= num_I_graphs_prime(prime)
+        print(num_I_graphs_prime(prime), count)
+
     return count
