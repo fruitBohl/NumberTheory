@@ -1,16 +1,7 @@
-from math import cos, sqrt, pi, comb, ceil, floor, prod
+from math import cos, sqrt, pi, comb, ceil, floor, prod, gcd
 from itertools import combinations
 from sympy import isprime
 from sympy.ntheory import factorint
-
-
-def gcd(p: int, q: int) -> int:
-    """
-    If p,q > 0, this returns the gcd of these integers.
-    """
-    while q != 0:
-        p, q = q, p % q
-    return p
 
 
 def is_coprime(x: int, y: int) -> bool:
@@ -97,7 +88,6 @@ def num_I_graphs_brute_force(n) -> int:
 
 def num_I_graphs_recursive(n: int) -> int:
     """
-
     Base Case: if n is a prime, simply return comb(int(ceil(p / 2) + 1), 2) - 1
     Recursive Case: loop over all factors of n and calculate the
                     sum for all factors f of (num_I_graphs_recursive(f))
