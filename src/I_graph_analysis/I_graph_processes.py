@@ -74,15 +74,29 @@ def num_connected_I_graphs_brute_force(n) -> int:
     count = 0
 
     if n % 2 == 0:
-        for k in range(floor(n / 2)):
-            for j in range(k + 1):
+        for k in range(1, floor(n / 2)):
+            for j in range(1, k + 1):
                 if gcd(gcd(k, j), n) == 1:
                     count += 1
     else:
-        for k in range(floor(n / 2) + 1):
-            for j in range(k + 1):
+        for k in range(1, floor(n / 2) + 1):
+            for j in range(1, k + 1):
                 if gcd(gcd(k, j), n) == 1:
                     count += 1
+    return count
+
+
+def num_I_graphs_brute_force(n: int) -> int:
+    count = 0
+
+    if n % 2 == 0:
+        for k in range(1, floor(n / 2)):
+            for _ in range(1, k + 1):
+                count += 1
+    else:
+        for k in range(1, floor(n / 2) + 1):
+            for _ in range(1, k + 1):
+                count += 1
     return count
 
 
@@ -91,7 +105,7 @@ def num_I_graphs(n: int) -> int:
     Calculates the number of possible I-graphs (up to isomorphism)
     """
 
-    return comb(int(ceil(n / 2) + 1), 2) - 1
+    return comb(int(ceil(n / 2)), 2)
 
 
 def num_connected_I_graphs(n: int, subproblems: dict[int, int]) -> int:
@@ -103,7 +117,7 @@ def num_connected_I_graphs(n: int, subproblems: dict[int, int]) -> int:
     """
 
     if isprime(n):
-        return comb(int(ceil(n / 2) + 1), 2) - 1
+        return comb(int(ceil(n / 2)), 2)
 
     subproblems_sum = 0
     prime_factors = factorint(n, multiple=True)
@@ -119,7 +133,7 @@ def num_connected_I_graphs(n: int, subproblems: dict[int, int]) -> int:
             subproblems[prime] = num_connected_I_graphs(prime, subproblems)
         subproblems_sum += subproblems[prime]
 
-    return comb(int(ceil(n / 2) + 1), 2) - (subproblems_sum + 1)
+    return num_I_graphs(n) - subproblems_sum
 
 
 def percentage_of_connected_I_graphs(n: int) -> int:
@@ -128,3 +142,9 @@ def percentage_of_connected_I_graphs(n: int) -> int:
     """
 
     return (num_connected_I_graphs(n, {}) / num_I_graphs(n)) * 100
+
+
+if __name__ == "__main__":
+    for n in range(3, 1000):
+        if num_connected_I_graphs(n, {}) != num_connected_I_graphs_brute_force(n):
+            print(n)
