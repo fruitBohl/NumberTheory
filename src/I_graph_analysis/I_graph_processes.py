@@ -66,7 +66,7 @@ def I_energy(n: int, j: int, k: int) -> float:
     return round(energy, 4)
 
 
-def num_I_graphs_brute_force(n) -> int:
+def num_connected_I_graphs_brute_force(n) -> int:
     """
     Brute force calculates the number of possible unique connected I-graphs with
     a particular n value.
@@ -86,7 +86,15 @@ def num_I_graphs_brute_force(n) -> int:
     return count
 
 
-def num_I_graphs_recursive(n: int) -> int:
+def num_I_graphs(n: int) -> int:
+    """
+    Calculates the number of possible I-graphs (up to isomorphism)
+    """
+
+    return comb(int(ceil(n / 2) + 1), 2) - 1
+
+
+def num_connected_I_graphs(n: int, subproblems: dict[int, int]) -> int:
     """
     Base Case: if n is a prime, simply return comb(int(ceil(p / 2) + 1), 2) - 1
     Recursive Case: loop over all factors of n and calculate the
@@ -97,14 +105,26 @@ def num_I_graphs_recursive(n: int) -> int:
     if isprime(n):
         return comb(int(ceil(n / 2) + 1), 2) - 1
 
-    subproblems = 0
+    subproblems_sum = 0
     prime_factors = factorint(n, multiple=True)
 
     for num in range(2, len(prime_factors)):
         for factor in set([prod(x) for x in combinations(prime_factors, num)]):
-            subproblems += num_I_graphs_recursive(factor)
+            if factor not in subproblems:
+                subproblems[factor] = num_connected_I_graphs(factor, subproblems)
+            subproblems_sum += subproblems[factor]
 
     for prime in factorint(n):
-        subproblems += num_I_graphs_recursive(prime)
+        if prime not in subproblems:
+            subproblems[prime] = num_connected_I_graphs(prime, subproblems)
+        subproblems_sum += subproblems[prime]
 
-    return comb(int(ceil(n / 2) + 1), 2) - (subproblems + 1)
+    return comb(int(ceil(n / 2) + 1), 2) - (subproblems_sum + 1)
+
+
+def percentage_of_connected_I_graphs(n: int) -> int:
+    """
+    Gives the percentage of connected I-graphs for a particular n value
+    """
+
+    return (num_connected_I_graphs(n, {}) / num_I_graphs(n)) * 100

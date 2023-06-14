@@ -4,11 +4,14 @@ from I_graph_processes import (
     I_eigenvalue,
     I_eigenvalues,
     I_energy,
-    num_I_graphs_brute_force,
-    num_I_graphs_recursive,
+    num_connected_I_graphs_brute_force,
+    num_connected_I_graphs,
+    num_I_graphs,
+    percentage_of_connected_I_graphs,
 )
 import pandas as pd
 import plotly.graph_objects as go
+from sympy.ntheory import primorial
 
 
 # Some Conjectures:
@@ -171,8 +174,18 @@ def three_dimensional_energy_plot(n: int) -> None:
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
 
-    for n in range(3, 1000):
-        if num_I_graphs_recursive(n) != num_I_graphs_brute_force(n):
-            print("n ", n)
-            print("attempt ", num_I_graphs_recursive(n))
-            print("actual ", num_I_graphs_brute_force(n))
+    avg_percentage = 0
+    count = 0
+
+    # for n in range(3, 1000000):
+    #     count += 1
+    #     avg_percentage += percentage_of_connected_I_graphs(n)
+
+    # print(avg_percentage / count)
+
+    print(percentage_of_connected_I_graphs(primorial(13) * 20))
+
+    # what percentage of I-graphs are connected (up to isomorphism)?
+    # define S(N) to be the total number of I-graphs with n <= N (up to isomorphism)
+    # denote T(N) to count those I-graphs with n<=N that are connected.
+    # Then we would take the limit of T(N)/S(N) as N -> infinity.
