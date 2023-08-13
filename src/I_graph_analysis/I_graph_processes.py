@@ -2,6 +2,7 @@ from math import cos, sqrt, pi, comb, ceil, floor, prod, gcd
 from itertools import combinations
 from sympy import isprime
 from sympy.ntheory import factorint
+import networkx as nx
 
 
 def is_coprime(x: int, y: int) -> bool:
@@ -78,6 +79,20 @@ class I_graph:
             energy += abs(neg_eigenvalue)
 
         return round(energy, 4)
+
+    def calculate_cheeger_constant(self, use_brute_force: bool = True) -> float:
+        if use_brute_force:
+            # get all possible subsets of vertices.
+            vertex_subsets = []
+
+            # find the corresponding edges which go from inside to outside each subset
+            # leaving_edges_vertex_subsets = {vertex_subset: edge_list}
+            leaving_edges_vertex_subsets = {}
+
+            # find the minimum of the all these vals
+            return min(leaving_edges_vertex_subsets)
+
+        return 0
 
 
 class I_Graph_Collection:
@@ -207,10 +222,3 @@ class I_Graph_Collection:
 
 if __name__ == "__main__":
     x = I_Graph_Collection(9, up_to_isomorphism=True)
-    y = I_Graph_Collection(9, up_to_isomorphism=False)
-    print("CONNECTED GRAPHS UP TO ISOMORPHISM WITH N=10")
-    print(x.count_connected_graphs(), x.count_connected_graphs(use_brute_force=True))
-    print(
-        "\nCONNECTED GRAPHS INCLUDING ONES WHICH ARE ISOMORPHIC TO EACHOTHER WITH N=10"
-    )
-    print(y.count_connected_graphs(), y.count_connected_graphs(use_brute_force=True))
