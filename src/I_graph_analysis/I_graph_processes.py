@@ -3,6 +3,7 @@ from itertools import combinations
 from sympy import isprime
 from sympy.ntheory import factorint
 import networkx as nx
+import matplotlib.pyplot as plt
 
 
 def is_coprime(x: int, y: int) -> bool:
@@ -79,6 +80,27 @@ class I_graph:
             energy += abs(neg_eigenvalue)
 
         return round(energy, 4)
+
+    def generate_I_graph(self) -> nx.Graph:
+        """
+        Generates a Networkx form of the graph I(n,j,k). This graph has 2*n nodes with
+        3*n edges.
+
+        The nodes of the outer ring are 0 to n-1. and the edges of the inner
+        ring are n to 2n - 1. Edges from (node, n + node), (node, j + node),
+        (node, k + node)
+        """
+
+        G = nx.Graph()
+
+        G.add_nodes_from(range(2 * self.n))
+
+        for node in range(self.n):
+            G.add_edge(node, self.n + node)
+            G.add_edge(node, (self.j + node) % self.n)
+            G.add_edge(self.n + node, self.n + (self.k + node) % self.n)
+
+        return G
 
     def calculate_cheeger_constant(self, use_brute_force: bool = True) -> float:
         if use_brute_force:
@@ -221,4 +243,7 @@ class I_Graph_Collection:
 
 
 if __name__ == "__main__":
-    x = I_Graph_Collection(9, up_to_isomorphism=True)
+    x = I_graph(4, 1, 1)
+    G = x.generate_I_graph()
+    nx.draw(G)
+    plt.savefig("test.png")
