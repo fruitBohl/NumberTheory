@@ -4,3 +4,4 @@
 *.pyc
 *.png
 *.html
+/env
