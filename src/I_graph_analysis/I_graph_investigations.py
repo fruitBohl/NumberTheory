@@ -1,14 +1,5 @@
 from math import floor, gcd
-from I_graph_processes import (
-    gcd,
-    I_eigenvalue,
-    I_eigenvalues,
-    I_energy,
-    num_connected_I_graphs_brute_force,
-    num_connected_I_graphs,
-    num_I_graphs,
-    percentage_of_connected_I_graphs,
-)
+from I_graph_processes import I_graph, I_Graph_Collection
 import pandas as pd
 import plotly.graph_objects as go
 from sympy.ntheory import primorial
@@ -31,8 +22,9 @@ def I_energy_distribution(n: int) -> int:
     for k in range(floor(n / 2) + 1):
         for j in range(k + 1):
             if gcd(gcd(k, j), n) == 1:
+                G = I_graph(n, j, k)
                 count += 1
-                energy = I_energy(n, j, k)
+                energy = G.energy()
                 if energy in energy_counts.keys():
                     energy_counts[energy] += 1
                 else:
@@ -67,19 +59,22 @@ def I_graph_with_smallest_second_eigenvalue(n: int) -> tuple[int, int]:
     for k in range(floor(n / 2) + 1):
         for j in range(k + 1):
             if gcd(gcd(k, j), n) == 1:
-                ordered_eigenvalues = I_eigenvalues(n, j, k)
+                G = I_graph(n, j, k)
+                ordered_eigenvalues = G.eigenvalues()
 
                 if ordered_eigenvalues[1] < second_largest_eigenvalue:
                     second_largest_eigenvalue = ordered_eigenvalues[1]
                     final_j = j
                     final_k = k
 
-    two_dimensional_eigenvalue_plot(n, final_j, final_k)
+    G_final = I_graph(n, final_j, final_k)
 
-    return (n, final_j, final_k), round(second_largest_eigenvalue, 4)
+    two_dimensional_eigenvalue_plot(G_final)
+
+    return G_final, round(second_largest_eigenvalue, 4)
 
 
-def two_dimensional_eigenvalue_plot(n: int, j: int, k: int) -> None:
+def two_dimensional_eigenvalue_plot(G: I_graph) -> None:
     """
     Plot all eigenvalues of the graph I(n,j,k)
     """
@@ -87,7 +82,7 @@ def two_dimensional_eigenvalue_plot(n: int, j: int, k: int) -> None:
     data = []
 
     for l in range(n):
-        (pos_eigenvalue, _) = I_eigenvalue(n, j, k, l)
+        (pos_eigenvalue, _) = G.eigenvalue(l)
         data.append([l, pos_eigenvalue])
 
     df = pd.DataFrame(columns=["l-value", "Eigenvalue"], data=data)
@@ -109,7 +104,8 @@ def two_dimensional_energy_plot(n: int) -> None:
 
     for k in range(floor(n / 2) + 1):
         for j in range(k + 1):
-            energy = I_energy(n, j, k)
+            G = I_graph(n, j, k)
+            energy = G.energy()
             data.append([f"({j},{k})", energy])
 
     df = pd.DataFrame(columns=["(j,k)", "Energy"], data=data)
@@ -135,8 +131,9 @@ def three_dimensional_energy_plot(n: int) -> None:
     for k in range(floor(n / 2) + 1):
         for j in range(k + 1):
             if gcd(gcd(k, j), n) == 1:
+                G = I_graph(n, j, k)
                 count += 1
-                energies[k][j] = I_energy(n, j, k)
+                energies[k][j] = G.energy()
 
     for k in range(floor(n / 2) + 1):
         for j in range(k + 1):
@@ -183,7 +180,9 @@ if __name__ == "__main__":
 
     # print(avg_percentage / count)
 
-    print(percentage_of_connected_I_graphs(primorial(13) * 20))
+    G_collection = I_Graph_Collection(primorial(18))
+
+    print("\n", G_collection.percentage_of_connected_graphs())
 
     # what percentage of I-graphs are connected (up to isomorphism)?
     # define S(N) to be the total number of I-graphs with n <= N (up to isomorphism)

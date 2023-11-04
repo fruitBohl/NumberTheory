@@ -40,7 +40,7 @@ class I_graph:
     def __del__(self):
         print(f"graph I({self.n},{self.j},{self.k}) deleted")
 
-    def I_eigenvalue(self, l: int) -> tuple[float, float]:
+    def eigenvalue(self, l: int) -> tuple[float, float]:
         """
         Calculate both (+/- sqrt) eigenvalues of I(n,j,k) given l.
         """
@@ -52,7 +52,7 @@ class I_graph:
             cos(arg * self.j) + cos(arg * self.k) - sqrt_component,
         )
 
-    def I_eigenvalues(self) -> list[float]:
+    def eigenvalues(self) -> list[float]:
         """
         Calculate an ordered list (from biggest to smallest) of all the eigenvalues of the
         graph I(n,j,k).
@@ -67,7 +67,7 @@ class I_graph:
 
         return eigenvalues
 
-    def I_energy(self) -> float:
+    def energy(self) -> float:
         """
         Calculate the energy of I(n,j,k). This is just the sum of the absolute value
         of all eigenvalues of the I-Graph.
@@ -81,7 +81,7 @@ class I_graph:
 
         return round(energy, 4)
 
-    def generate_I_graph(self) -> nx.Graph:
+    def generate_networkx_graph(self) -> nx.Graph:
         """
         Generates a Networkx form of the graph I(n,j,k). This graph has 2*n nodes with
         3*n edges.
@@ -132,12 +132,12 @@ class I_Graph_Collection:
             raise ValueError
 
     def __del__(self):
-        print(f"Collection of I-graphs with n={self.n} deleted")
+        print(f"\nCollection of I-graphs with n={self.n} deleted")
 
     def count_collection(self, m: int = -1, use_brute_force: bool = False) -> int:
         """
-        Counts the number of I-graphs in the collection, either using brute force, or
-        the designed algorithm.
+        Counts the number of I-graphs in the collection,
+        either using brute force, or the designed algorithm.
         """
 
         n = self.n
@@ -238,7 +238,9 @@ class I_Graph_Collection:
 
             return self.count_collection(n) - subproblems_sum
 
-    def percentage_of_connected_I_graphs(self) -> int:
+    def percentage_of_connected_graphs(self) -> int:
+        connected_graphs = self.count_connected_graphs()
+
         return (self.count_connected_graphs() / self.count_collection()) * 100
 
 
