@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#%%
+# %%
 """
 Created on Thu Nov 17 10:36:55 2022
 
@@ -22,7 +22,7 @@ of elements that will fall through this filter.
 I would like to write an analytic sequence to represent each of these and take the limit as n -> inf. 
 """
 
-#%%
+# %%
 from math import prod
 import numpy as np
 import itertools
@@ -155,15 +155,7 @@ def main(prime):
     print(false_twins)
     print("")
 
-<<<<<<< HEAD
-main(11)
-
-
-
-# %%
-=======
     return
 
 
 main(13)
->>>>>>> fd3b5bfbb1e67c195b4efa2e6c77ee00ac39d513

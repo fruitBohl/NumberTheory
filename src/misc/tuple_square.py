@@ -2,7 +2,12 @@ from gurobipy import *
 from math import sqrt
 
 
-def tuple_square(n: int, first_val: int, constrain_first: bool, supress_output: bool):
+def tuple_square(
+    n: int,
+    first_val: int = None,
+    constrain_first: bool = False,
+    supress_output: bool = False,
+):
     N = range(n)
     E = []
     for n in N:
@@ -59,13 +64,7 @@ def tuple_square(n: int, first_val: int, constrain_first: bool, supress_output: 
 
 
 if __name__ == "__main__":
-    K = [1, 2, 3, 5, 7, 11, 13, 17, 19, 23]
-
-    for k in K:
-        tuple_square(n=3, first_val=k, constrain_first=True, supress_output=True)
-        print("")
-
-    tuple_square(n=5, first_val=1, constrain_first=False, supress_output=False)
+    tuple_square(n=5)
 
 
 # Set parameter WLSAccessID
