@@ -3,5 +3,6 @@
 *.pdf
 *.pyc
 *.png
+*.jpg
 *.html
 /env

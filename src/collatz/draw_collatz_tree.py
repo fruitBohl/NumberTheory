@@ -1,7 +1,33 @@
-from binarytree import build, Node
+from binarytree import Node
+import graphviz
 
-# Notes about collatz tree
-# anything above 3 mod 6 cannot be in a loop
+
+def inorder_traversal(root: Node, dot):
+    if root:
+        inorder_traversal(root.left, dot)
+        dot.node(str(root.value), label=str(root.value))
+        if root.left:
+            dot.edge(str(root.left.value), str(root.value), style="dotted")
+        if root.right:
+            dot.edge(str(root.value), str(root.right.value), style="dotted")
+        inorder_traversal(root.right, dot)
+
+
+def postorder_traversal(root: Node, dot):
+    if root:
+        postorder_traversal(root.left, dot)
+        postorder_traversal(root.right, dot)
+        dot.node(str(root.value), label=str(root.value))
+        if root.left:
+            dot.edge(str(root.left.value), str(root.value), style="dotted")
+        if root.right:
+            dot.edge(str(root.right.value), str(root.value), style="dotted")
+
+
+def visualize_binary_tree(root: Node):
+    dot_inorder = graphviz.Digraph(comment="Collatz Tree")
+    postorder_traversal(root, dot_inorder)
+    dot_inorder.render("collatz_tree", view=True, format="jpg")
 
 
 def collatz(
@@ -46,4 +72,4 @@ if __name__ == "__main__":
 
     collatz([root], depth - 1, depth - 1)
 
-    print(root)
+    visualize_binary_tree(root)
