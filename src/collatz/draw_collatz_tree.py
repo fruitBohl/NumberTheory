@@ -1,86 +1,49 @@
-from binarytree import build
-from typing import *
+from binarytree import build, Node
 
 # Notes about collatz tree
 # anything above 3 mod 6 cannot be in a loop
 
 
 def collatz(
-    breadth_first_representation: List[list],
-    prev_generated_elems: List[int],
-    iterations_remaining: int,
-    num_iterations: int,
-) -> Tuple[List[int], List[int]]:
+    prev_generated_nodes: list[Node], iterations_remaining: int, num_iterations: int
+) -> list[Node]:
     """
     Recursive function to generate breadth-first list representation of collatz tree of
     depth num_iterations.
     """
 
     if iterations_remaining > 0:
-        breadth_first_representation, prev_generated_elems = add_to_tree(
-            breadth_first_representation, prev_generated_elems, num_iterations
-        )
-        return collatz(
-            breadth_first_representation,
-            prev_generated_elems,
-            iterations_remaining - 1,
-            num_iterations,
-        )
-    elif iterations_remaining == 0:
-        return breadth_first_representation, prev_generated_elems
+        prev_generated_nodes = add_to_tree(prev_generated_nodes, num_iterations)
+        return collatz(prev_generated_nodes, iterations_remaining - 1, num_iterations)
+    return
 
 
-def add_nones(paths: List[int], num: int) -> List[List[int]]:
-    """
-    Simply appends 'num' None elements to the list.
-    """
-
-    num_nones = 0
-    if num < 0:
-        num = 0
-
-    while num_nones != num:
-        paths.append(None)
-        num_nones += 1
-    return paths
-
-
-def add_to_tree(
-    breadth_first_representation: List[int],
-    prev_generated_elems: List[int],
-    num_iterations: int,
-) -> Tuple[List[int], List[int]]:
+def add_to_tree(prev_generated_nodes: list[Node], num_iterations: int) -> list[Node]:
     """
     Adds another level to the breadth_first_representation of the collatz tree.
     """
 
-    elements_generated = []
+    nodes_generated = []
 
-    breadth_first_representation = add_nones(
-        breadth_first_representation, 2**num_iterations
-    )
+    for node in prev_generated_nodes:
+        new_double_node = Node(node.value * 2)
+        node.left = new_double_node
+        nodes_generated.append(new_double_node)
 
-    for element in prev_generated_elems:
-        element_index = breadth_first_representation.index(element)
-        elements_generated.append(element * 2)
+        if (node.value % 6 == 4) and (node.value > 4):
+            new_odd_node = Node(int((node.value - 1) / 3))
+            nodes_generated.append(new_odd_node)
+            node.right = new_odd_node
 
-        if element_index == 0:
-            breadth_first_representation[1] = element * 2
-        elif element_index == 1:
-            breadth_first_representation[3] = element * 2
-        else:
-            breadth_first_representation[element_index * 2 + 1] = element * 2
-
-        if (element % 6 == 4) & (element > 4):
-            elements_generated.append(int((element - 1) / 3))
-            breadth_first_representation[element_index * 2 + 2] = int((element - 1) / 3)
-
-    return breadth_first_representation, elements_generated
+    return nodes_generated
 
 
 if __name__ == "__main__":
     depth = int(input("Enter depth of collatz tree you would like to visualize: "))
     start_pos = int(input("Enter number for bottom of collatz tree:"))
-    paths, last_gen_elems = collatz([start_pos], [start_pos], depth - 1, depth - 1)
-    tree = build(paths)
-    tree.pprint()
+
+    root = Node(start_pos)
+
+    collatz([root], depth - 1, depth - 1)
+
+    print(root)
