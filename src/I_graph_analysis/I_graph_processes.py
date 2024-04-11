@@ -131,8 +131,8 @@ class I_Graph_Collection:
         if n < 3:
             raise ValueError
 
-    def __del__(self):
-        print(f"\nCollection of I-graphs with n={self.n} deleted")
+    # def __del__(self):
+    #     print(f"\nCollection of I-graphs with n={self.n} deleted")
 
     def count_collection(self, m: int = -1, use_brute_force: bool = False) -> int:
         """
@@ -154,7 +154,6 @@ class I_Graph_Collection:
 
                 for j in range(1, upper):
                     for k in range(j, upper):
-                        print((n, j, k))
                         count += 1
                 return count
             else:  # up to isomorphism graphs using algorithm
@@ -173,7 +172,6 @@ class I_Graph_Collection:
 
                 for j in range(1, upper):
                     for k in range(1, upper):
-                        print((n, j, k))
                         count += 1
 
                 return count
@@ -212,7 +210,6 @@ class I_Graph_Collection:
                     lower = j
                 for k in range(lower, upper):
                     if gcd(n, gcd(j, k)) == 1:
-                        print((n, j, k))
                         count += 1
             return count
         else:
