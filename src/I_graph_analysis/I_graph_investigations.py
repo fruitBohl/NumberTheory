@@ -1,8 +1,9 @@
-from math import floor, gcd
+from math import floor, gcd, ceil
 from I_graph_processes import I_graph, I_Graph_Collection
 import pandas as pd
 import plotly.graph_objects as go
 from sympy.ntheory import primorial
+from sympy import isprime
 
 
 # Some Conjectures:
@@ -171,18 +172,17 @@ def three_dimensional_energy_plot(n: int) -> None:
 if __name__ == "__main__":
     pd.options.plotting.backend = "plotly"
 
-    avg_percentage = 0
-    count = 0
+    for n in range(3, 1000):
+        if not isprime(n):
+            continue
 
-    # for n in range(3, 1000000):
-    #     count += 1
-    #     avg_percentage += percentage_of_connected_I_graphs(n)
+        G_collection = I_Graph_Collection(n)
+        brute_force_connected = G_collection.count_connected_graphs(use_brute_force=True)
+        connected = G_collection.count_connected_graphs()
 
-    # print(avg_percentage / count)
+        print(f"n = {n}, examine = {ceil(n/2)}, connected = {connected}")
 
-    G_collection = I_Graph_Collection(primorial(18))
-
-    print("\n", G_collection.percentage_of_connected_graphs())
+        assert brute_force_connected == connected
 
     # what percentage of I-graphs are connected (up to isomorphism)?
     # define S(N) to be the total number of I-graphs with n <= N (up to isomorphism)
