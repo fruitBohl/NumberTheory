@@ -57,8 +57,8 @@ def I_graph_with_smallest_second_eigenvalue(n: int) -> tuple[int, int]:
     final_k = 0
     second_largest_eigenvalue = 1e15
 
-    for k in range(floor(n / 2) + 1):
-        for j in range(k + 1):
+    for k in range(1, floor(n / 2) + 1):
+        for j in range(1, k + 1):
             if gcd(gcd(k, j), n) == 1:
                 G = I_graph(n, j, k)
                 ordered_eigenvalues = G.eigenvalues()
@@ -70,7 +70,7 @@ def I_graph_with_smallest_second_eigenvalue(n: int) -> tuple[int, int]:
 
     G_final = I_graph(n, final_j, final_k)
 
-    two_dimensional_eigenvalue_plot(G_final)
+    # two_dimensional_eigenvalue_plot(G_final)
 
     return G_final, round(second_largest_eigenvalue, 4)
 
@@ -82,7 +82,7 @@ def two_dimensional_eigenvalue_plot(G: I_graph) -> None:
 
     data = []
 
-    for l in range(n):
+    for l in range(G.n):
         (pos_eigenvalue, _) = G.eigenvalue(l)
         data.append([l, pos_eigenvalue])
 
@@ -91,9 +91,9 @@ def two_dimensional_eigenvalue_plot(G: I_graph) -> None:
     fig = df.plot.line(
         x="l-value",
         y="Eigenvalue",
-        title=f"Eigenvalues of I({n},{j},{k}) Evaluated at Positive Square Root",
+        title=f"Eigenvalues of I({G.n},{G.j},{G.k}) Evaluated at Positive Square Root",
     )
-    fig.write_html(f"visualisations/eigenvalue_plot_{n}_{j}_{k}.html")
+    fig.write_html(f"visualisations/eigenvalue_plot_{G.n}_{G.j}_{G.k}.html")
 
 
 def two_dimensional_energy_plot(n: int) -> None:
@@ -130,7 +130,7 @@ def three_dimensional_energy_plot(n: int) -> None:
     count = 0
 
     for k in range(floor(n / 2) + 1):
-        for j in range(k + 1):
+        for j in range(1, k + 1):
             if gcd(gcd(k, j), n) == 1:
                 G = I_graph(n, j, k)
                 count += 1
@@ -169,9 +169,7 @@ def three_dimensional_energy_plot(n: int) -> None:
     fig.write_html(f"visualisations/3d_energy_plot_{n}.html")
 
 
-if __name__ == "__main__":
-    pd.options.plotting.backend = "plotly"
-
+def analyse_connected_I_graphs():
     for n in range(3, 1000):
         if not isprime(n):
             continue
@@ -183,6 +181,28 @@ if __name__ == "__main__":
         print(f"n = {n}, examine = {ceil(n/2)}, connected = {connected}")
 
         assert brute_force_connected == connected
+
+
+if __name__ == "__main__":
+    pd.options.plotting.backend = "plotly"
+
+    # three_dimensional_energy_plot(n=120)
+
+    data = {"n": [], "j": [], "k": [], "Second Smallest Eigenvalue": []}
+
+    for i in range(3, 500):
+        G, val = I_graph_with_smallest_second_eigenvalue(i)
+        print(f"n = {i}, j = {G.j}, k = {G.k}, second eigenvalue = {val}")
+        data["n"].append(i)
+        data["j"].append(G.j)
+        data["k"].append(G.k)
+        data["Second Smallest Eigenvalue"].append(val)
+    
+    df = pd.DataFrame(data)
+
+
+
+    df.to_csv("data/second_eigenvalues.csv")
 
     # what percentage of I-graphs are connected (up to isomorphism)?
     # define S(N) to be the total number of I-graphs with n <= N (up to isomorphism)

@@ -37,8 +37,8 @@ class I_graph:
         if (n < 3) or (j < 1) or (k < 1) or (j > int(n / 2)) or (j > int(n / 2)):
             raise ValueError
 
-    def __del__(self):
-        print(f"graph I({self.n},{self.j},{self.k}) deleted")
+    # def __del__(self):
+    #     print(f"graph I({self.n},{self.j},{self.k}) deleted")
 
     def eigenvalue(self, l: int) -> tuple[float, float]:
         """
@@ -60,7 +60,7 @@ class I_graph:
         eigenvalues = []
 
         for l in range(self.n):
-            (pos_eigenvalue, neg_eigenvalue) = self.I_eigenvalue(l)
+            (pos_eigenvalue, neg_eigenvalue) = self.eigenvalue(l)
             eigenvalues.append(pos_eigenvalue)
             eigenvalues.append(neg_eigenvalue)
         eigenvalues.sort(reverse=True)
@@ -75,7 +75,7 @@ class I_graph:
         energy = 0
 
         for l in range(self.n):
-            (pos_eigenvalue, neg_eigenvalue) = self.I_eigenvalue(l)
+            (pos_eigenvalue, neg_eigenvalue) = self.eigenvalue(l)
             energy += abs(pos_eigenvalue)
             energy += abs(neg_eigenvalue)
 
@@ -242,7 +242,7 @@ class I_Graph_Collection:
 
 
 if __name__ == "__main__":
-    x = I_graph(4, 1, 1)
-    G = x.generate_I_graph()
+    x = I_graph(5, 2, 2)
+    G = x.generate_networkx_graph()
     nx.draw(G)
-    plt.savefig("test.png")
+    plt.savefig("graph.png")
