@@ -116,6 +116,31 @@ class I_graph:
 
         return 0
 
+    def check_isomorphism(self, G: I_graph) -> bool:
+        """
+        Checks whether two I-graphs are isomorphic. From Wolfram Mathworld
+        (https://mathworld.wolfram.com/IGraph.html) we have that two I-graphs I(n,j,k) and I(n,l,m)
+        are isomorphic iff there exists an integer a relatively prime to n such that either
+        {l, m}={aj (mod n), ak (mod n)} or {l, m}={aj (mod n), -ak (mod n)}
+
+        Note: this function only checks isomorphism between two I-graphs.
+        """
+
+        n = self.n
+        j = self.j
+        k = self.k
+
+        l = G.j
+        m = G.k
+
+        for a in range(1, n):
+            if is_coprime(a, n):
+                if (l == (a * j) % n and m == (a * k) % n) or (
+                    l == (a * j) % n and m == (-a * k) % n
+                ):
+                    return True
+        return False
+
 
 class I_Graph_Collection:
     """
@@ -138,6 +163,8 @@ class I_Graph_Collection:
         """
         Counts the number of I-graphs in the collection,
         either using brute force, or the designed algorithm.
+
+        # TODO: properly acount for isomorphism.
         """
 
         n = self.n
@@ -187,6 +214,7 @@ class I_Graph_Collection:
         m: int = -1,
         subproblems: dict[int, int] = {},
         use_brute_force: bool = False,
+        verbose: bool = False,
     ) -> int:
         """
         Counts the number of connected I-graphs in the collection, either using brute
@@ -210,6 +238,8 @@ class I_Graph_Collection:
                     lower = j
                 for k in range(lower, upper):
                     if gcd(n, gcd(j, k)) == 1:
+                        if verbose:
+                            print(f"Brute force, {(n,j,k)}")
                         count += 1
             return count
         else:
