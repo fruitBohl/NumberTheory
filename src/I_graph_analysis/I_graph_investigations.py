@@ -202,7 +202,13 @@ def generate_spectral_gap_in_range(N: int) -> None:
     information in a dataframe.
     """
 
-    data = {"n": [], "j": [], "k": [], "Second Largest Eigenvalue": [], "Spectral Gap": []}
+    data = {
+        "n": [],
+        "j": [],
+        "k": [],
+        "Second Largest Eigenvalue": [],
+        "Spectral Gap": [],
+    }
 
     for i in range(3, N):
         G, val = I_graph_with_smallest_second_eigenvalue(i)
@@ -219,8 +225,8 @@ def generate_spectral_gap_in_range(N: int) -> None:
 
 
 if __name__ == "__main__":
-    G_collection = I_Graph_Collection(10)
-    brute_force_connected = G_collection.count_connected_graphs(use_brute_force=True)
-    connected = G_collection.count_connected_graphs()
+    # G_collection = I_Graph_Collection(10)
+    # brute_force_connected = G_collection.count_connected_graphs(use_brute_force=True)
+    # connected = G_collection.count_connected_graphs()
 
-    breakpoint()
+    generate_spectral_gap_in_range(500)
