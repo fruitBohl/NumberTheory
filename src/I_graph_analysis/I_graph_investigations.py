@@ -5,10 +5,17 @@ import plotly.graph_objects as go
 from sympy.ntheory import primorial
 from sympy import isprime
 
+pd.options.plotting.backend = "plotly"
+
 
 # Some Conjectures:
 # 2. As n->infinity the energies for all possible I-graphs with n value
 #    group around n*(3+1/30).
+
+# what percentage of I-graphs are connected (up to isomorphism)?
+# define S(N) to be the total number of I-graphs with n <= N (up to isomorphism)
+# denote T(N) to count those I-graphs with n<=N that are connected.
+# Then we would take the limit of T(N)/S(N) as N -> infinity.
 
 
 def I_energy_distribution(n: int) -> int:
@@ -169,42 +176,50 @@ def three_dimensional_energy_plot(n: int) -> None:
     fig.write_html(f"visualisations/3d_energy_plot_{n}.html")
 
 
-def analyse_connected_I_graphs():
-    for n in range(3, 1000):
-        if not isprime(n):
-            continue
+def analyse_connected_I_graphs(N: int) -> None:
+    """
+    Confirm that the number of connected I-graphs of order p<=N according to my conjecture
+    is equal to the brute force method.
+    """
+
+    for n in range(3, N):
+        # if not isprime(n):
+        #     continue
 
         G_collection = I_Graph_Collection(n)
-        brute_force_connected = G_collection.count_connected_graphs(use_brute_force=True)
+        brute_force_connected = G_collection.count_connected_graphs(
+            use_brute_force=True
+        )
         connected = G_collection.count_connected_graphs()
 
-        print(f"n = {n}, examine = {ceil(n/2)}, connected = {connected}")
-
+        print(f"n = {n}, connected = {connected}")
         assert brute_force_connected == connected
 
 
-if __name__ == "__main__":
-    pd.options.plotting.backend = "plotly"
-
-    # three_dimensional_energy_plot(n=120)
+def generate_spectral_gap_in_range(N: int) -> None:
+    """
+    Generate the spectral gap for all I-graphs with n <= N and save this
+    information in a dataframe.
+    """
 
     data = {"n": [], "j": [], "k": [], "Second Smallest Eigenvalue": []}
 
-    for i in range(3, 500):
+    for i in range(3, N):
         G, val = I_graph_with_smallest_second_eigenvalue(i)
         print(f"n = {i}, j = {G.j}, k = {G.k}, second eigenvalue = {val}")
         data["n"].append(i)
         data["j"].append(G.j)
         data["k"].append(G.k)
         data["Second Smallest Eigenvalue"].append(val)
-    
+
     df = pd.DataFrame(data)
-
-
 
     df.to_csv("data/second_eigenvalues.csv")
 
-    # what percentage of I-graphs are connected (up to isomorphism)?
-    # define S(N) to be the total number of I-graphs with n <= N (up to isomorphism)
-    # denote T(N) to count those I-graphs with n<=N that are connected.
-    # Then we would take the limit of T(N)/S(N) as N -> infinity.
+
+if __name__ == "__main__":
+    G_collection = I_Graph_Collection(10)
+    brute_force_connected = G_collection.count_connected_graphs(use_brute_force=True)
+    connected = G_collection.count_connected_graphs()
+
+    breakpoint()
