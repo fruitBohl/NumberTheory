@@ -202,7 +202,7 @@ def generate_spectral_gap_in_range(N: int) -> None:
     information in a dataframe.
     """
 
-    data = {"n": [], "j": [], "k": [], "Second Smallest Eigenvalue": []}
+    data = {"n": [], "j": [], "k": [], "Second Largest Eigenvalue": [], "Spectral Gap": []}
 
     for i in range(3, N):
         G, val = I_graph_with_smallest_second_eigenvalue(i)
@@ -210,11 +210,12 @@ def generate_spectral_gap_in_range(N: int) -> None:
         data["n"].append(i)
         data["j"].append(G.j)
         data["k"].append(G.k)
-        data["Second Smallest Eigenvalue"].append(val)
+        data["Second Largest Eigenvalue"].append(val)
+        data["Spectral Gap"].append(3 - val)
 
     df = pd.DataFrame(data)
 
-    df.to_csv("data/second_eigenvalues.csv")
+    df.to_csv("data/spectral_gap.csv")
 
 
 if __name__ == "__main__":
