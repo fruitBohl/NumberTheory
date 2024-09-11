@@ -1,3 +1,4 @@
+from __future__ import annotations
 from math import cos, sqrt, pi, comb, ceil, floor, prod, gcd
 from itertools import combinations
 from sympy import isprime
@@ -184,9 +185,9 @@ class I_Graph_Collection:
                         count += 1
                 return count
             else:  # up to isomorphism graphs using algorithm
-                choices = int(floor(n / 2))
-                if n % 2 == 1:
-                    choices += 1
+                choices = int(floor((n+1) / 2))
+                # if n % 2 == 1:
+                #     choices += 1
 
                 return comb(choices, 2)
         else:
@@ -249,7 +250,6 @@ class I_Graph_Collection:
             subproblems_sum = 0
 
             prime_factors = factorint(n, multiple=True)
-
             for num in range(2, len(prime_factors)):
                 for factor in set([prod(x) for x in combinations(prime_factors, num)]):
                     if factor not in subproblems:
