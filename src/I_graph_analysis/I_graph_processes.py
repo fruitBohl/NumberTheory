@@ -185,7 +185,7 @@ class I_Graph_Collection:
                         count += 1
                 return count
             else:  # up to isomorphism graphs using algorithm
-                choices = int(floor((n+1) / 2))
+                choices = int(floor((n + 1) / 2))
                 # if n % 2 == 1:
                 #     choices += 1
 

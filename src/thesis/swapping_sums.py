@@ -61,6 +61,34 @@ def sum_phi_diff2(n: int) -> int:
 
 
 if __name__ == "__main__":
-    for n in range(3, 100):
-        assert sum_phi_std(n) == sum_phi_diff1(n) == sum_phi_diff2(n)
-    print("True")
+    # for n in range(3, 100):
+    #     assert sum_phi_std(n) == sum_phi_diff1(n) == sum_phi_diff2(n)
+    # print("True")
+
+    # for n in range(2,1000):
+    #     if isPrime(n) and (n**2 % 120 == 1):
+    #         print(f"{n}^2 mod 120 = {n**2 % 120}")
+
+    #         if (n+1) % 3 == 0:
+    #             print(f"    ({n}+1) mod 3 = 0")
+
+    #         if (n+1) % 5 == 0:
+    #             print(f"    ({n}+1) mod 5 = 0")
+
+    #         if (n-1) % 3 == 0:
+    #             print(f"    ({n}-1) mod 3 = 0")
+
+    #         if (n-1) % 5 == 0:
+    #             print(f"    ({n}-1) mod 5 = 0")
+    #         print("")
+
+    for n in range(2, 1000):
+        if isPrime(n):
+            if n % 15 == 2:
+                print(f"{n} mod 15 = 2")
+            if n % 15 == 7:
+                print(f"{n} mod 15 = 7")
+            if n % 15 == 8:
+                print(f"{n} mod 15 = 8")
+            if n % 15 == 13:
+                print(f"{n} mod 15 = 13")

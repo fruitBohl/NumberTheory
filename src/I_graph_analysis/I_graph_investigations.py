@@ -192,7 +192,9 @@ def analyse_connected_I_graphs(N: int) -> None:
         )
         connected = G_collection.count_connected_graphs()
 
-        print(f"n = {n}, connected = {connected}, brute_force_connected = {brute_force_connected}")
+        print(
+            f"n = {n}, connected = {connected}, brute_force_connected = {brute_force_connected}"
+        )
         assert brute_force_connected == connected
 
 
@@ -226,7 +228,9 @@ def generate_spectral_gap_in_range(N: int) -> None:
 
 if __name__ == "__main__":
     G_collection = I_Graph_Collection(16)
-    brute_force_connected = G_collection.count_connected_graphs(use_brute_force=True, verbose=True)
+    brute_force_connected = G_collection.count_connected_graphs(
+        use_brute_force=True, verbose=True
+    )
     connected = G_collection.count_connected_graphs(verbose=True)
 
     print(f"connected = {connected}, brute_force_connected = {brute_force_connected}")
